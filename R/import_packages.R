@@ -1,2 +1,2 @@
-#' @import ggplot2 graphics grDevices
+#' @importFrom magrittr %>%
 NULL

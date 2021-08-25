@@ -16,6 +16,7 @@ Depends: graphics, grDevices, ggplot2
 Imports: 
   here,
   stringr,
+  magrittr,
   tidyr,
   tidyselect,
   raster,
