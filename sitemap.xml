@@ -7,6 +7,9 @@
     <loc>https://uw-upwelling-project.github.io/imageryML//reference/addIMGtopanel.html</loc>
   </url>
   <url>
+    <loc>https://uw-upwelling-project.github.io/imageryML//reference/buffer300.wintri.html</loc>
+  </url>
+  <url>
     <loc>https://uw-upwelling-project.github.io/imageryML//reference/dendIMG.html</loc>
   </url>
   <url>
@@ -19,6 +22,15 @@
     <loc>https://uw-upwelling-project.github.io/imageryML//reference/findK.html</loc>
   </url>
   <url>
+    <loc>https://uw-upwelling-project.github.io/imageryML//reference/getNearestPointOnLine.html</loc>
+  </url>
+  <url>
+    <loc>https://uw-upwelling-project.github.io/imageryML//reference/getStatsAroundPoint.html</loc>
+  </url>
+  <url>
+    <loc>https://uw-upwelling-project.github.io/imageryML//reference/getValueAtPoint.html</loc>
+  </url>
+  <url>
     <loc>https://uw-upwelling-project.github.io/imageryML//reference/getdata.html</loc>
   </url>
   <url>
@@ -28,10 +40,16 @@
     <loc>https://uw-upwelling-project.github.io/imageryML//reference/kheatmap.html</loc>
   </url>
   <url>
+    <loc>https://uw-upwelling-project.github.io/imageryML//reference/makeCoastBuffer.html</loc>
+  </url>
+  <url>
     <loc>https://uw-upwelling-project.github.io/imageryML//reference/myheatmap.html</loc>
   </url>
   <url>
     <loc>https://uw-upwelling-project.github.io/imageryML//reference/processCSV.html</loc>
+  </url>
+  <url>
+    <loc>https://uw-upwelling-project.github.io/imageryML//reference/sample_raster.html</loc>
   </url>
   <url>
     <loc>https://uw-upwelling-project.github.io/imageryML//reference/yearTable.html</loc>
