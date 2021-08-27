@@ -41,5 +41,3 @@ vignettes/*.pdf
 .Rproj.user
 imageryML.Rproj
 
-# pkgdown
-docs
