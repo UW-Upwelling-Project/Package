@@ -21,3 +21,4 @@ Plots K versus cost.
 \description{
 findK will loop through a range of Ks and will plot the cost
 }
+\keyword{clustering}

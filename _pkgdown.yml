@@ -5,6 +5,24 @@ home:
   - text: Team discussion
     href: https://github.com/orgs/UW-Upwelling-Project/teams/seattle
     
+reference:
+- title: Clustering
+  desc: Functions that help with clustering
+- contents:
+  - has_keyword("clustering")
+- title: Plots
+  desc: Functions that do plots
+- contents:
+  - has_keyword("plotting")
+- title: Image utilities
+- contents:
+  - has_keyword("image")
+- title: Data
+  desc: Data
+  contents:
+  - has_keyword("data")
+
+    
 development:
   mode: auto
 
@@ -17,3 +35,4 @@ authors:
     href: http://eeholmes.github.io/
   Howard Baek:
     href: http://insidethetv.rbind.io/
+    

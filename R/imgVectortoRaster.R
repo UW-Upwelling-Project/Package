@@ -16,7 +16,8 @@
 #' the latitude and longitude values. `dat` has the land (NAs) while `dat.clean` has the land
 #' removed so is smaller. `pos.loc` is the location of the positive values (not land) in `dat`.
 #' `pos.loc` is used to allow you to reconstruct the image from `dat.clean`.
-#'
+#' 
+#' @keywords image
 #' @export
 imgVectortoRaster <- function(centers, datalist, proj.name="+proj=longlat +datum=WGS84"){
   n_K <- nrow(centers)

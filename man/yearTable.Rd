@@ -38,3 +38,4 @@ Bespoke function for Quan Seminar talk. Month on y-axis and year on x-axis. Each
 \details{
 \strong{Notes}: Probably too customized and prelimanary to keep.
 }
+\keyword{plotting}

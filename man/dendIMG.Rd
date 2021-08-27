@@ -54,5 +54,5 @@ centers <- matrix(runif(10*4), 10, 4)
 img.list <- list()
 for(i in 1:10) img.list[[i]] <- raster::as.raster(matrix(centers[i,],2,2))
 dendIMG(centers, img.list, lab.extra="none")
-
 }
+\keyword{plotting}

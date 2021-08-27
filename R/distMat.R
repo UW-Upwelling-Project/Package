@@ -6,7 +6,7 @@
 #' 
 #' @param X A matrix
 #' @param remove.mean remove the mean from each row of X
-#' 
+#' @keywords clustering
 #' @export
 distMat <- function(X, remove.mean=FALSE){
   K <- nrow(X)

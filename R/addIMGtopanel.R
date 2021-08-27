@@ -22,7 +22,7 @@
 #' \donttest{
 #' addIMGtopanel(p, img.list)
 #' }
-#' 
+#' @keywords plotting
 #' @export
 addIMGtopanel <- function(p1, img.list, pal = colorRamps::matlab.like(100)){
 

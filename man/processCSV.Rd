@@ -35,3 +35,4 @@ processCSV will read in a csv file of SST and return the matrices needed for \co
 \code{stats::kmeans()} wants a matrix where each row is a sample of your data. So we want each
 row of our data matrix to be a date and the columns will be the pixels in the image.
 }
+\keyword{data}

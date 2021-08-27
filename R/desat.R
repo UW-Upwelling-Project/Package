@@ -10,7 +10,7 @@
 #' @param sat saturation level
 #' 
 #' @return A list of desaturated colors.
-#' 
+#' @keywords image
 #' @export
 desat <- function(cols, sat=0.5) {
   X <- diag(c(1, sat, 1)) %*% grDevices::rgb2hsv(grDevices::col2rgb(cols))

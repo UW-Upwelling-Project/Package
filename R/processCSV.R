@@ -23,6 +23,7 @@
 #' non-NA pixels (columns in `dat.wide`) so that the image can be reconstructed after
 #' k clustering is performed.
 #'
+#' @keywords data
 #' @export
 processCSV <- function(file, aspect_ratio, lat_range, long_range, has.alt = FALSE) {
 

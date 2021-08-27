@@ -14,6 +14,7 @@
 #'
 #' @return A list with two types of objects: a heatmap and a dendogram.
 #'
+#' @keywords plotting
 #' @export
 yearTable <- function(X2, method = c("kmeans", "hclust.complete", "hclust.ward", "dbscan"),
                       K = 3, iter.max = 25, nstart = 100, eps = 7,

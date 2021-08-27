@@ -8,7 +8,7 @@
 #' @param n_K max number of clusters
 #' 
 #' @return Plots K versus cost.
-#' 
+#' @keywords clustering
 #' @export
 findK <- function(X, nstart=25, iter.max=10, n_K=15){
 # Initlizize costs

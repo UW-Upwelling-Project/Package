@@ -17,7 +17,7 @@
 #' @param dend.type Typ of dendrogram passed to [dendIMG()].
 #'
 #' @return A list with two types of objects: a heatmap and a dendogram.
-#'
+#' @keywords plotting
 #' @export
 kheatmap <- function(n_K, X_norm, datalist, main.n=5, sub.n=n_K, iter.max=25,
                      nstart=100, plotit=TRUE,

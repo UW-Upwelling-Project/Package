@@ -32,5 +32,5 @@ p <- ggplot(mtcars, aes(x = mpg, y = wt)) + geom_point() +
 \donttest{
 addIMGtopanel(p, img.list)
 }
-
 }
+\keyword{plotting}

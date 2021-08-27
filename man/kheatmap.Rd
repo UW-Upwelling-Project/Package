@@ -50,3 +50,4 @@ Bespoke function for Quan Seminar talk.
 \details{
 \strong{Notes}: Probably too customized and prelimanary to keep.
 }
+\keyword{plotting}

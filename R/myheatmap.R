@@ -13,7 +13,7 @@
 #' @param plotit If TRUE, plot the heat map.
 #'
 #' @return A ggplot object.
-#'
+#' @keywords plotting
 #' @export
 myheatmap <- function(dend, kobject, main.n=3, sub.n=7, ramp=c("mean", "var"),
                       ramp.type=1, plotit=TRUE){

@@ -27,7 +27,7 @@
 #' @param datadir The folder where to save the data.
 #' 
 #' @return The function saves a csv file and returns the data list invisibly.
-#' 
+#' @keywords data
 #' @export
 getdata <- function(id, pars=NULL, lat=c(7,13), lon=c(72,78), date=NULL, 
                     altitude=10, alt.name="altitude",

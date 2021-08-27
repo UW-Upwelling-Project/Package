@@ -26,3 +26,4 @@ the latitude and longitude values. \code{dat} has the land (NAs) while \code{dat
 removed so is smaller. \code{pos.loc} is the location of the positive values (not land) in \code{dat}.
 \code{pos.loc} is used to allow you to reconstruct the image from \code{dat.clean}.
 }
+\keyword{image}

@@ -28,3 +28,4 @@ distMat(X, remove.mean = FALSE)
 \description{
 Distance matrices
 }
+\keyword{clustering}

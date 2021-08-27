@@ -22,3 +22,4 @@ https://stackoverflow.com/questions/26314701/r-reducing-colour-saturation-of-a-c
 See the \strong{colorspace} library for examples of \code{hsv()} colorspace manipulations and
 \strong{RColorBrewer} library for some example colors
 }
+\keyword{image}
