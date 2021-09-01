@@ -12,7 +12,7 @@ Authors@R:
            email = "howardba@uw.edu")
            )
 Description: Various functions for downloading data, processing raster images, and running machine learning algorithms on images.
-Depends: graphics, grDevices, ggplot2
+Depends: R (>= 3.5.0), graphics, grDevices, ggplot2
 Imports: 
   colorRamps,
   dendextend,
@@ -36,11 +36,14 @@ Suggests:
     fpc,
     gridExtra,
     knitr,
+    markdown,
+    methods,
     lubridate,
     png,
     readr,
     rmarkdown,
     scales,
+    spatialEco,
     tidyverse,
     tmap
 License: AGPL (>= 3)

@@ -1,6 +1,8 @@
 #' Keep only holes in polygons
 #' 
-#' Adapted from **spatialEcho** function `remove.holes()`
+#' Adapted from **spatialEco** function `remove.holes()`
+#' 
+#' @param x A `sp::SpatialPolygons` object.
 #' 
 #' @export
 #' @keywords image
@@ -8,7 +10,7 @@ only.holes <- function (x)
 {
   if (!any(which(utils::installed.packages()[, 1] %in% "maptools"))) 
     stop("please install maptools package before running this function")
-  xp <- slot(x, "polygons")
+  xp <- methods::slot(x, "polygons")
   holes <- lapply(xp, function(x) sapply(methods::slot(x, "Polygons"), 
                                          methods::slot, "hole"))
   res <- lapply(1:length(xp), function(i) methods::slot(xp[[i]], 

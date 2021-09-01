@@ -15,7 +15,7 @@ knitr::opts_chunk$set(eval = FALSE)
 
 This example shows how the data in the package were created and saved.
 
-Specify where to save the downloaded data. Data from a `griddap()` call can be verbose, so you'll probably want a folder for it.
+Specify where to save the downloaded data. Data from a `rerddap::griddap()` call can be verbose, so you'll probably want a folder for it.
 ```{r create_dir}
 fil_dir <- file.path(here::here(), "inst", "extdata")
 if(!dir.exists(fil_dir)) dir.create(fil_dir)
@@ -71,12 +71,12 @@ world.wintri <- sp::spTransform(world, crs.wintri)
 
 ```{r}
 p <- lapply(world.wintri@polygons , slot , "Polygons")
-big <- log(unlist(lapply(p[[1]], function(x) slot(x, "area")))) > 14
+big <- log(unlist(lapply(p[[1]], function(x) methods::slot(x, "area")))) > 14
 # Only keep the continents
 trim.world.wintri <- world.wintri
 trim.world.wintri@polygons[[1]]@Polygons <- trim.world.wintri@polygons[[1]]@Polygons[which(big)]
 trim.world.wintri@polygons[[1]]@plotOrder <- 1:length(trim.world.wintri@polygons[[1]]@Polygons)
-slot(trim.world.wintri, "polygons") <- lapply(slot(trim.world.wintri, "polygons"),
+slot(trim.world.wintri, "polygons") <- lapply(methods::slot(trim.world.wintri, "polygons"),
    "comment<-", NULL)
 ```
 
@@ -104,7 +104,7 @@ e300 <- spatialEco::remove.holes(spatialEco::remove.holes(e))
 # Only keep the continents
 e300@polygons[[1]]@Polygons <- e300@polygons[[1]]@Polygons[2]
 e300@polygons[[1]]@plotOrder <- as.integer(1)
-el300 <- as(e300, "SpatialLines")
+el300 <- methods::as(e300, "SpatialLines")
 df <- c()
 n <- length(el300@lines[[1]]@Lines)
 for (i in 1:n) {
@@ -164,7 +164,7 @@ for(j in 1:length(polys)){
 buff20 <- rgeos::gBuffer(el300, width=280)
 # Remove the outer part of the polygons and make into lines.
 e20 <- only.holes(buff20)
-el20 <- as(e20, "SpatialLines")
+el20 <- methods::as(e20, "SpatialLines")
 # Convert to a dataframe also.
 df <- c()
 n <- length(el20@lines[[1]]@Lines)

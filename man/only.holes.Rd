@@ -6,7 +6,10 @@
 \usage{
 only.holes(x)
 }
+\arguments{
+\item{x}{A \code{sp::SpatialPolygons} object.}
+}
 \description{
-Adapted from \strong{spatialEcho} function \code{remove.holes()}
+Adapted from \strong{spatialEco} function \code{remove.holes()}
 }
 \keyword{image}

@@ -17,20 +17,20 @@ processOIData <- function(inputfile) {
   # Process data
   df_processed <- df_raw %>% 
     # Get rid of miscellaneous first row
-    slice(-1) %>% 
+    dplyr::slice(-1) %>% 
     # zlev is a column of zeroes, so get rid of that
-    dplyr::select(-zlev) %>% 
+    dplyr::select(-"zlev") %>% 
     # Convert into date
-    dplyr::mutate(time = lubridate::ymd_hms(time)) %>% 
+    dplyr::mutate(time = lubridate::ymd_hms(.data$time)) %>% 
     # Set column names
-    dplyr::rename(date = time,
-                  lat = latitude,
-                  lon = longitude) %>% 
+    dplyr::rename(date = .data$time,
+                  lat = .data$latitude,
+                  lon = .data$longitude) %>% 
     # Convert date column to Date type
-    dplyr::mutate(date = as.Date(date),
-                  lat = as.numeric(lat),
-                  lon = as.numeric(lon),
-                  sst = as.numeric(sst))
+    dplyr::mutate(date = as.Date(.data$date),
+                  lat = as.numeric(.data$lat),
+                  lon = as.numeric(.data$lon),
+                  sst = as.numeric(.data$sst))
   
   # mask out Puget Sound, Strait of Juan de Fuca and Georgia Strait
   masks <- list(c(235.4488, 236.884, 47.87651, 50.13138),
@@ -45,7 +45,7 @@ processOIData <- function(inputfile) {
     df_processed$sst[mask_loc] <- NA
   }
   df_processed <- df_processed %>%
-    mutate(lon = lon - 360)
+    dplyr::mutate(lon = .data$lon - 360)
   
   return(df_processed)
 }

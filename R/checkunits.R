@@ -3,6 +3,7 @@
 #' Utility function to return the units.
 #'
 #' @param x a projection string
+#' @param units the units you want to convert to
 #'
 #' @return list with crs with units added and units
 #' @keywords image

@@ -11,6 +11,7 @@
 #' @param max_lat maximum latitude
 #' @param min_lon minimum longitude
 #' @param max_lon maximum longitude
+#' @param silent no messages to console
 #' 
 #' @return The function saves a csv file and returns the data list invisibly.
 #' @author Howard Baek

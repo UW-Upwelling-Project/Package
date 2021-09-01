@@ -136,9 +136,9 @@ final_df <- as.data.frame(final_df)
 For making plots, it will be helpful to have the lat-lon values for the coast points.
 ```{r eval=FALSE}
 # 1. make the x and y into spatial points. need to use the wintri projection
-tmp <- sp::SpatialPoints(final_df %>% dplyr::select(x, y), proj4string = crs(wintri.crs))
+tmp <- sp::SpatialPoints(final_df %>% dplyr::select(x, y), proj4string = raster::crs(wintri.crs))
 # 2. transform into the +proj=longlat; I am using crs(r) just to make sure I use the same crs as the original raster (which should be "+proj=longlat")
-tmp <- sp::spTransform(tmp, crs(r))
+tmp <- sp::spTransform(tmp, raster::crs(r))
 # 3. Add the lat-lon onto final_df
 final_df_wlatlon <-cbind(final_df, lon=tmp@coords[,1], lat=tmp@coords[,2])
 final_df_wlatlon <- final_df_wlatlon[c("date", "x", "y", "lon", "lat", 

@@ -5,6 +5,10 @@
 \alias{buffers}
 \alias{world}
 \alias{sample_points}
+\alias{buffer20}
+\alias{buffer300}
+\alias{world.wintri}
+\alias{trim.world.wintri}
 \title{Smoothed coast data objects}
 \description{
 See \code{vignette("Smooth Coastline Data")} for how these data were created.
@@ -19,7 +23,7 @@ so there will be more upwelling NAs along the coast.
 dataframe format in Winkel Tripel projection. A buffer line that is from a coastline
 where the islands are removed is also included but this line will go on top of islands
 so there will be more upwelling NAs along the coast.
-\item \code{world} A world coastline in \code{sp::SpatialLines}, format in Winkel Tripel projection.
+\item \code{world} A world coastline in \code{sp::SpatialLines}, format in Winkel Tripel projection. \code{trim.world.wintri} has the islands removed
 \item \code{sample_points} A sample of points from the smooth 20km buffer line where points
 are 100km apart.
 }

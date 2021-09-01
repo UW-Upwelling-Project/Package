@@ -17,8 +17,8 @@ getStatsAroundPoint <- function(p, r, d = 100, na.rm=FALSE) {
   # make sure the units are right
   if (!inherits(p, "SpatialPoints")) stop("pts should be a SpatialPoints object")
   if (!inherits(r, "RasterLayer")) stop("r should be a raster")
-  if (!identical(crs(p), crs(r))) stop("points and raster don't have the same projection")
-  if(stringr::str_detect(crs(r), "longlat")) message("raster is in longlat. you probably want projection in meters.\n")
+  if (!identical(raster::crs(p), raster::crs(r))) stop("points and raster don't have the same projection")
+  if(stringr::str_detect(raster::crs(r), "longlat")) message("raster is in longlat. you probably want projection in meters.\n")
 
     if(d==0){ # Get value at points
       vals <- raster::extract(r, p)

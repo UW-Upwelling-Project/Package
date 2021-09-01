@@ -8,6 +8,8 @@ checkunits(x, units = "m")
 }
 \arguments{
 \item{x}{a projection string}
+
+\item{units}{the units you want to convert to}
 }
 \value{
 list with crs with units added and units

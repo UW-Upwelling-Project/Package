@@ -26,7 +26,7 @@ getNearestPointOnLine <- function(l, p, smooth.method = c("ksmooth", "none", "gS
   ### Check that inputs are right format and convert as needed
   if (!inherits(p, "SpatialPoints")) stop("p must be SpatialPoints")
   if (!inherits(l, "SpatialLines")) stop("l must be SpatialLines")
-  crs.l <- crs(l)
+  crs.l <- raster::crs(l)
   if(smooth.method=="gSimplfy" && is.null(extras$tol)) extras$tol <- 30
   if(smooth.method=="ksmooth" && is.null(extras$smoothness)) extras$smoothness <- 5
   l <- switch(smooth.method,

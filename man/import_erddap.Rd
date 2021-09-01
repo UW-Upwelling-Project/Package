@@ -26,6 +26,8 @@ import_erddap(
 \item{min_lon}{minimum longitude}
 
 \item{max_lon}{maximum longitude}
+
+\item{silent}{no messages to console}
 }
 \value{
 The function saves a csv file and returns the data list invisibly.
