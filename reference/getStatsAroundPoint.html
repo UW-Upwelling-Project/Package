@@ -41,7 +41,7 @@
 
 <meta property="og:title" content="Get the mean raster values around a point — getStatsAroundPoint" />
 <meta property="og:description" content="This is applies raster::extract() but does some checking on the projection
-of the inputs." />
+of the inputs. Set d=0 to get value at the points." />
 
 
 
@@ -73,7 +73,7 @@ of the inputs." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">imageryML</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.3</span>
       </span>
     </div>
 
@@ -87,6 +87,27 @@ of the inputs." />
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/auto3.html">Auto Upwelling Detection 3</a>
+    </li>
+    <li>
+      <a href="../articles/auto3-example.html">Auto Upwelling 3 1980-2020</a>
+    </li>
+    <li>
+      <a href="../articles/data.html">Smooth Coastline Data</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -116,17 +137,10 @@ of the inputs." />
 
     <div class="ref-description">
     <p>This is applies <code><a href='https://rdrr.io/pkg/raster/man/extract.html'>raster::extract()</a></code> but does some checking on the projection
-of the inputs.</p>
+of the inputs. Set <code>d=0</code> to get value at the points.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>getStatsAroundPoint</span><span class='op'>(</span>
-  <span class='va'>p</span>,
-  <span class='va'>r</span>,
-  d <span class='op'>=</span> <span class='fl'>100</span>,
-  units <span class='op'>=</span> <span class='st'>"km"</span>,
-  crs.to.use <span class='op'>=</span> <span class='va'>crs.wintri</span>,
-  fun <span class='op'>=</span> <span class='st'>"mean"</span>
-<span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>getStatsAroundPoint</span><span class='op'>(</span><span class='va'>p</span>, <span class='va'>r</span>, d <span class='op'>=</span> <span class='fl'>100</span>, na.rm <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -141,22 +155,20 @@ of the inputs.</p>
     </tr>
     <tr>
       <th>d</th>
-      <td><p>distance from the coastline</p></td>
+      <td><p>distance to average around the point. Distance is in the units of the points and raster objects</p></td>
     </tr>
     <tr>
-      <th>units</th>
-      <td><p>what units the distance is in</p></td>
-    </tr>
-    <tr>
-      <th>crs.to.use</th>
-      <td><p>name of the projection. must be one that
-the <strong>sp</strong> package recognizes.</p></td>
+      <th>na.rm</th>
+      <td><p>whether to remove NAs in the raster when computing the average</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>raster value at the points</p>
+    <p>raster values around the points</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p><code><a href='checkunits.html'>checkunits</a>()</code></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

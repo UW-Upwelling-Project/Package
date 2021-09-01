@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Convert vector images to rasters — imgVectortoRaster • imageryML</title>
+<title>Autodetection algorithm 3 — autoDetect3 • imageryML</title>
 
 
 <!-- jquery -->
@@ -39,9 +39,11 @@
 
 
 
-<meta property="og:title" content="Convert vector images to rasters — imgVectortoRaster" />
-<meta property="og:description" content="Takes a matrix where each row is an image in vector form and turns that into raster images. This
-function is specific to the data format for the upwelling project." />
+<meta property="og:title" content="Autodetection algorithm 3 — autoDetect3" />
+<meta property="og:description" content="Take a data frame processed from data downloaded from ERDDAP and evaluates
+upwelling by comparing the SST at a point along a smoothed coast to the average
+SST at a point offshore. This uses a smoothed coastline smoothed offshore line,
+and coastal sample points that are part of the imageML package. See smoothCoastData." />
 
 
 
@@ -130,44 +132,90 @@ function is specific to the data format for the upwelling project." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Convert vector images to rasters</h1>
-    <small class="dont-index">Source: <a href='https://github.com/UW-Upwelling-Project/imageryML/blob/master/R/imgVectortoRaster.R'><code>R/imgVectortoRaster.R</code></a></small>
-    <div class="hidden name"><code>imgVectortoRaster.Rd</code></div>
+    <h1>Autodetection algorithm 3</h1>
+    <small class="dont-index">Source: <a href='https://github.com/UW-Upwelling-Project/imageryML/blob/master/R/autoDetect3.R'><code>R/autoDetect3.R</code></a></small>
+    <div class="hidden name"><code>autoDetect3.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Takes a matrix where each row is an image in vector form and turns that into raster images. This
-function is specific to the data format for the upwelling project.</p>
+    <p>Take a data frame processed from data downloaded from ERDDAP and evaluates
+upwelling by comparing the SST at a point along a smoothed coast to the average
+SST at a point offshore. This uses a smoothed coastline smoothed offshore line,
+and coastal sample points that are part of the <strong>imageML</strong> package. See <code><a href='smoothCoastData.html'>smoothCoastData</a></code>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>imgVectortoRaster</span><span class='op'>(</span><span class='va'>centers</span>, <span class='va'>datalist</span>, proj.name <span class='op'>=</span> <span class='st'>"+proj=longlat +datum=WGS84"</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>autoDetect3</span><span class='op'>(</span>
+  <span class='va'>x</span>,
+  threshold <span class='op'>=</span> <span class='fl'>2</span>,
+  val <span class='op'>=</span> <span class='st'>"sst"</span>,
+  p <span class='op'>=</span> <span class='fu'>imageryML</span><span class='fu'>::</span><span class='va'><a href='smoothCoastData.html'>sample_points</a></span><span class='op'>$</span><span class='va'>km100</span>,
+  smooth.method <span class='op'>=</span> <span class='st'>"ksmooth"</span>,
+  l.offshore <span class='op'>=</span> <span class='fu'>imageryML</span><span class='fu'>::</span><span class='va'><a href='smoothCoastData.html'>buffer300</a></span><span class='op'>$</span><span class='va'>wintri</span><span class='op'>$</span><span class='va'>line</span>,
+  d.offshore <span class='op'>=</span> <span class='fl'>50</span>,
+  l.coast <span class='op'>=</span> <span class='fu'>imageryML</span><span class='fu'>::</span><span class='va'><a href='smoothCoastData.html'>buffer20</a></span><span class='op'>$</span><span class='va'>wintri</span><span class='op'>$</span><span class='va'>line</span>,
+  d.coast <span class='op'>=</span> <span class='fl'>0</span>,
+  na.rm <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>centers</th>
-      <td><p>a matrix where each row is an image in vector form. It is assumed to be only
-the cleaned (no land) images.</p></td>
+      <th>x</th>
+      <td><p>cleaned dataframe. See <code><a href='processOIData.html'>processOIData</a>()</code>.</p></td>
     </tr>
     <tr>
-      <th>datalist</th>
-      <td><p>a data list with information about the positive locations (non-land).</p></td>
+      <th>threshold</th>
+      <td><p>offshore-coast difference for upwelling</p></td>
     </tr>
     <tr>
-      <th>proj.name</th>
-      <td><p>default projection name</p></td>
+      <th>val</th>
+      <td><p>what the SST column is called</p></td>
+    </tr>
+    <tr>
+      <th>p</th>
+      <td><p>the coastal points as a <code><a href='https://rdrr.io/pkg/sp/man/SpatialPoints.html'>sp::SpatialPoints</a></code> object. Default is to use <code>km100</code> in <code>data("sample_points)"</code></p></td>
+    </tr>
+    <tr>
+      <th>smooth.method</th>
+      <td><p>(optional) the smoothing to apply to the offshore line</p></td>
+    </tr>
+    <tr>
+      <th>l.offshore</th>
+      <td><p>(optional) the offshore line as a <code><a href='https://rdrr.io/pkg/sp/man/SpatialLines.html'>sp::SpatialLines</a></code> object.</p></td>
+    </tr>
+    <tr>
+      <th>d.offshore</th>
+      <td><p>the radius of the circle to average around the offshore points.</p></td>
+    </tr>
+    <tr>
+      <th>l.coast</th>
+      <td><p>(optional) the coast line as a <code><a href='https://rdrr.io/pkg/sp/man/SpatialLines.html'>sp::SpatialLines</a></code> object.</p></td>
+    </tr>
+    <tr>
+      <th>d.coast</th>
+      <td><p>the radius along the coast to average around the coast points. Operates only along the coast line.</p></td>
+    </tr>
+    <tr>
+      <th>na.rm</th>
+      <td><p>whether to remove NAs in the raster when calculating the offshore SST. Used to deal with islands.</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>extra smoothing parameters to pass to <code><a href='getNearestPointOnLine.html'>getNearestPointOnLine</a>()</code>.</p></td>
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>dataframe with upwelling TRUE/FALSE added</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p><code>datalist</code> is a list with <code>dat</code>, <code>dat.clean</code>, and <code>pos.loc</code>. <code>dat</code> and <code>dat.clean</code> are
-vectorized images, meaning a raster image is made into a vector by concatenating each row of
-the raster into a rows x columns vector. The first 2 rows of <code>dat</code> and <code>dat.clean</code> are
-the latitude and longitude values. <code>dat</code> has the land (NAs) while <code>dat.clean</code> has the land
-removed so is smaller. <code>pos.loc</code> is the location of the positive values (not land) in <code>dat</code>.
-<code>pos.loc</code> is used to allow you to reconstruct the image from <code>dat.clean</code>.</p>
+    <p>This expects that only one date is in the dataframe. Run this code to
+filter the dataframe by date.
+<code>df_processed &lt;- x %&gt;% dplyr::filter(date == custom_date)</code></p>
+<p>The coastal points and offshore line are saved data objects in <strong>imageryML</strong>. See <code>vignette("Smooth Coastline Data")</code> for how these data were created.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

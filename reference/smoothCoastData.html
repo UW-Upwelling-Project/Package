@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Convert vector images to rasters — imgVectortoRaster • imageryML</title>
+<title>Smoothed coast data objects — smoothCoastData • imageryML</title>
 
 
 <!-- jquery -->
@@ -39,9 +39,8 @@
 
 
 
-<meta property="og:title" content="Convert vector images to rasters — imgVectortoRaster" />
-<meta property="og:description" content="Takes a matrix where each row is an image in vector form and turns that into raster images. This
-function is specific to the data format for the upwelling project." />
+<meta property="og:title" content="Smoothed coast data objects — smoothCoastData" />
+<meta property="og:description" content="See vignette(&quot;Smooth Coastline Data&quot;) for how these data were created." />
 
 
 
@@ -130,44 +129,34 @@ function is specific to the data format for the upwelling project." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Convert vector images to rasters</h1>
-    <small class="dont-index">Source: <a href='https://github.com/UW-Upwelling-Project/imageryML/blob/master/R/imgVectortoRaster.R'><code>R/imgVectortoRaster.R</code></a></small>
-    <div class="hidden name"><code>imgVectortoRaster.Rd</code></div>
+    <h1>Smoothed coast data objects</h1>
+    <small class="dont-index">Source: <a href='https://github.com/UW-Upwelling-Project/imageryML/blob/master/R/smoothCoastData.R'><code>R/smoothCoastData.R</code></a></small>
+    <div class="hidden name"><code>smoothCoastData.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Takes a matrix where each row is an image in vector form and turns that into raster images. This
-function is specific to the data format for the upwelling project.</p>
+    <p>See <code>vignette("Smooth Coastline Data")</code> for how these data were created.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>imgVectortoRaster</span><span class='op'>(</span><span class='va'>centers</span>, <span class='va'>datalist</span>, proj.name <span class='op'>=</span> <span class='st'>"+proj=longlat +datum=WGS84"</span><span class='op'>)</span></pre>
 
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>centers</th>
-      <td><p>a matrix where each row is an image in vector form. It is assumed to be only
-the cleaned (no land) images.</p></td>
-    </tr>
-    <tr>
-      <th>datalist</th>
-      <td><p>a data list with information about the positive locations (non-land).</p></td>
-    </tr>
-    <tr>
-      <th>proj.name</th>
-      <td><p>default projection name</p></td>
-    </tr>
-    </table>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p><code>datalist</code> is a list with <code>dat</code>, <code>dat.clean</code>, and <code>pos.loc</code>. <code>dat</code> and <code>dat.clean</code> are
-vectorized images, meaning a raster image is made into a vector by concatenating each row of
-the raster into a rows x columns vector. The first 2 rows of <code>dat</code> and <code>dat.clean</code> are
-the latitude and longitude values. <code>dat</code> has the land (NAs) while <code>dat.clean</code> has the land
-removed so is smaller. <code>pos.loc</code> is the location of the positive values (not land) in <code>dat</code>.
-<code>pos.loc</code> is used to allow you to reconstruct the image from <code>dat.clean</code>.</p>
+    
+<ul>
+<li><p><code>buffer300</code> A 300 km buffer list in <code><a href='https://rdrr.io/pkg/sp/man/SpatialPolygons.html'>sp::SpatialPolygons</a></code>, <code><a href='https://rdrr.io/pkg/sp/man/SpatialLines.html'>sp::SpatialLines</a></code>, and
+dataframe format in Winkel Tripel projection. A buffer line that is from a coastline
+where the islands are removed is also included but this line will go on top of islands
+so there will be more upwelling NAs along the coast.</p></li>
+<li><p><code>buffer20</code> A 20 km buffer in <code><a href='https://rdrr.io/pkg/sp/man/SpatialPolygons.html'>sp::SpatialPolygons</a></code>, <code><a href='https://rdrr.io/pkg/sp/man/SpatialLines.html'>sp::SpatialLines</a></code>, and
+dataframe format in Winkel Tripel projection. A buffer line that is from a coastline
+where the islands are removed is also included but this line will go on top of islands
+so there will be more upwelling NAs along the coast.</p></li>
+<li><p><code>world</code> A world coastline in <code><a href='https://rdrr.io/pkg/sp/man/SpatialLines.html'>sp::SpatialLines</a></code>, format in Winkel Tripel projection. <code>trim.world.wintri</code> has the islands removed</p></li>
+<li><p><code>sample_points</code> A sample of points from the smooth 20km buffer line where points
+are 100km apart.</p></li>
+</ul>
+
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

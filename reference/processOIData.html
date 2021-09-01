@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Convert vector images to rasters — imgVectortoRaster • imageryML</title>
+<title>Process Optimal Interpolation data — processOIData • imageryML</title>
 
 
 <!-- jquery -->
@@ -39,9 +39,8 @@
 
 
 
-<meta property="og:title" content="Convert vector images to rasters — imgVectortoRaster" />
-<meta property="og:description" content="Takes a matrix where each row is an image in vector form and turns that into raster images. This
-function is specific to the data format for the upwelling project." />
+<meta property="og:title" content="Process Optimal Interpolation data — processOIData" />
+<meta property="og:description" content="Process a download from CoastWatch ERDDAP OI SST data. Mask out the Puget Sound" />
 
 
 
@@ -130,44 +129,32 @@ function is specific to the data format for the upwelling project." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Convert vector images to rasters</h1>
-    <small class="dont-index">Source: <a href='https://github.com/UW-Upwelling-Project/imageryML/blob/master/R/imgVectortoRaster.R'><code>R/imgVectortoRaster.R</code></a></small>
-    <div class="hidden name"><code>imgVectortoRaster.Rd</code></div>
+    <h1>Process Optimal Interpolation data</h1>
+    <small class="dont-index">Source: <a href='https://github.com/UW-Upwelling-Project/imageryML/blob/master/R/processOIData.R'><code>R/processOIData.R</code></a></small>
+    <div class="hidden name"><code>processOIData.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Takes a matrix where each row is an image in vector form and turns that into raster images. This
-function is specific to the data format for the upwelling project.</p>
+    <p>Process a download from CoastWatch ERDDAP OI SST data. Mask out the Puget Sound</p>
     </div>
 
-    <pre class="usage"><span class='fu'>imgVectortoRaster</span><span class='op'>(</span><span class='va'>centers</span>, <span class='va'>datalist</span>, proj.name <span class='op'>=</span> <span class='st'>"+proj=longlat +datum=WGS84"</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>processOIData</span><span class='op'>(</span><span class='va'>inputfile</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>centers</th>
-      <td><p>a matrix where each row is an image in vector form. It is assumed to be only
-the cleaned (no land) images.</p></td>
-    </tr>
-    <tr>
-      <th>datalist</th>
-      <td><p>a data list with information about the positive locations (non-land).</p></td>
-    </tr>
-    <tr>
-      <th>proj.name</th>
-      <td><p>default projection name</p></td>
+      <th>inputfile</th>
+      <td><p>a csv file like downloaded above</p></td>
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>return a processed data frame</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p><code>datalist</code> is a list with <code>dat</code>, <code>dat.clean</code>, and <code>pos.loc</code>. <code>dat</code> and <code>dat.clean</code> are
-vectorized images, meaning a raster image is made into a vector by concatenating each row of
-the raster into a rows x columns vector. The first 2 rows of <code>dat</code> and <code>dat.clean</code> are
-the latitude and longitude values. <code>dat</code> has the land (NAs) while <code>dat.clean</code> has the land
-removed so is smaller. <code>pos.loc</code> is the location of the positive values (not land) in <code>dat</code>.
-<code>pos.loc</code> is used to allow you to reconstruct the image from <code>dat.clean</code>.</p>
+    <p>download.file("https://coastwatch.pfeg.noaa.gov/erddap/griddap/ncdcOisst21Agg.csv?sst%5B(2019-01-01T12:00:00Z):1:(2020-01-01T12:00:00Z)%5D%5B(0.0):1:(0.0)%5D%5B(35.125):1:(52.125)%5D%5B(228.125):1:(238.125)%5D", "data/pilot_data.csv")</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
