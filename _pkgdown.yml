@@ -9,6 +9,14 @@ navbar:
     - news
     right: github
 
+articles:
+- title: Examples
+  navbar: ~
+  contents:
+  - auto3
+  - auto3-example
+  - data
+
 home:
   links:
   - text: Team discussion
@@ -48,4 +56,5 @@ authors:
     href: http://eeholmes.github.io/
   Howard Baek:
     href: http://insidethetv.rbind.io/
+ 
     

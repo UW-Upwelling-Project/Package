@@ -10,7 +10,7 @@
 #' @param inputfile a csv file like downloaded above
 #' 
 #' @return return a processed data frame
-#' @keywords upwelling
+#' @keywords data
 #' @export
 processOIData <- function(inputfile) {
   df_raw <- readr::read_csv(inputfile)

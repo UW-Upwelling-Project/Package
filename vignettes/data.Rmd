@@ -1,10 +1,10 @@
 ---
-title: "9 Smooth Coastline Data"
+title: "Smooth Coastline Data"
 author: "Eli Holmes"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{9 Smooth Coastline Data}
+  %\VignetteIndexEntry{Smooth Coastline Data}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

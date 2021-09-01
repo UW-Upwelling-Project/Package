@@ -54,13 +54,13 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/1_auto_upwelling_3.html">Auto Upwelling Detection 3</a>
+      <a href="../articles/auto3.html">Auto Upwelling Detection 3</a>
     </li>
     <li>
-      <a href="../articles/2_Auto-upwelling-3%201982-2020.html">Auto Upwelling 3 1980-2020</a>
+      <a href="../articles/auto3-example.html">Auto Upwelling 3 1980-2020</a>
     </li>
     <li>
-      <a href="../articles/5_smooth_data.html">9 Smooth Coastline Data</a>
+      <a href="../articles/data.html">Smooth Coastline Data</a>
     </li>
   </ul>
 </li>
@@ -85,7 +85,7 @@
 
       
 
-      </header><script src="2_Auto-upwelling-3%201982-2020_files/header-attrs-2.10/header-attrs.js"></script><div class="row">
+      </header><script src="auto3-example_files/header-attrs-2.10/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Auto Upwelling 3 1980-2020</h1>
@@ -93,17 +93,14 @@
             
             <h4 class="date">2021-09-01</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/UW-Upwelling-Project/imageryML/blob/master/vignettes/2_Auto-upwelling-3%201982-2020.Rmd"><code>vignettes/2_Auto-upwelling-3 1982-2020.Rmd</code></a></small>
-      <div class="hidden name"><code>2_Auto-upwelling-3 1982-2020.Rmd</code></div>
+      <small class="dont-index">Source: <a href="https://github.com/UW-Upwelling-Project/imageryML/blob/master/vignettes/auto3-example.Rmd"><code>vignettes/auto3-example.Rmd</code></a></small>
+      <div class="hidden name"><code>auto3-example.Rmd</code></div>
 
     </div>
 
     
     
-<p>This example shows how work through the points along the 20km coastline and return the upwelling for each day in the year. See <code>vignette("Auto Upwelling Detection 3", package="imageryML")</code> for how to do this for one year. This vignette is just the code.</p>
-<ul>
-<li>Calls to <code><a href="https://rdrr.io/r/utils/vignette.html">vignette()</a></code>, like <code>vignette("pkgdown")</code>.</li>
-</ul>
+<p>This example shows how work through the points along the 20km coastline and return the upwelling for each day in the year. See <code><a href="../articles/auto3.html">vignette("auto3")</a></code> for how to do this for one year. This vignette is just the code.</p>
 <p>Load the needed packages for plotting and data.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/raster">raster</a></span><span class="op">)</span>
@@ -112,9 +109,6 @@
 <div id="download-the-data" class="section level1">
 <h1 class="hasAnchor">
 <a href="#download-the-data" class="anchor"></a>Download the data</h1>
-<div id="download-from-erddap" class="section level2">
-<h2 class="hasAnchor">
-<a href="#download-from-erddap" class="anchor"></a>Download from ERDDAP</h2>
 <p>Set region lat-lon of interest.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">min_lat</span> <span class="op">&lt;-</span> <span class="fl">40.625</span>
@@ -138,14 +132,9 @@
     silent <span class="op">=</span> <span class="cn">TRUE</span>
   <span class="op">)</span>
 <span class="op">}</span></code></pre></div>
-</div>
-<div id="function-to-process-raw-data-frame" class="section level2">
+<div id="process-raw-data" class="section level2">
 <h2 class="hasAnchor">
-<a href="#function-to-process-raw-data-frame" class="anchor"></a>Function to process raw data frame</h2>
-</div>
-<div id="process-data" class="section level2">
-<h2 class="hasAnchor">
-<a href="#process-data" class="anchor"></a>Process data</h2>
+<a href="#process-raw-data" class="anchor"></a>Process raw data</h2>
 <p>Notice that I substract 360 off the longitudes. <strong>This is crucial.</strong> The standard projections use this location for the 0 longitude line.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">processDF</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">df_raw</span><span class="op">)</span> <span class="op">{</span>
@@ -180,7 +169,7 @@
 <div id="set-up-needed-lines-and-raster" class="section level2">
 <h2 class="hasAnchor">
 <a href="#set-up-needed-lines-and-raster" class="anchor"></a>Set up needed lines and raster</h2>
-<p>Need to create a sample raster on the Winkel Tripel projection (what the buffer 300km line is in) and then get its bounding box and crop our 300km line to that.</p>
+<p>Need to create a sample raster on the Winkel Tripel projection (what the buffer 300km line is in) and then get its bounding box and crop our 300km line to that. <code><a href="../articles/data.html">vignette("data")</a></code> describes the 300km, 20km and sample points data sets.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">efil</span> <span class="op">&lt;-</span> <span class="st">"erddap_2010-01-01_2010-12-31_lat_40.625_50.625_lon_229.875_236.625.csv"</span>
 <span class="va">filename</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="va">efil</span>, package <span class="op">=</span> <span class="st">"imageryML"</span><span class="op">)</span>
@@ -243,6 +232,9 @@
 <h2 class="hasAnchor">
 <a href="#summary" class="anchor"></a>Summary</h2>
 <p><code>final_df_wlatlon</code> now has the upwelling logical value for each day from 1982 to 2020. This data frame is save in <code>extdata</code> as <code>final_df_wlatlon.rda</code>. This data.frame can be used for making heatmaps and contour maps of the upwelling timing.</p>
+<p>Available at</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">filename</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"final_df_wlatlon.rda"</span>, package <span class="op">=</span> <span class="st">"imageryML"</span><span class="op">)</span></code></pre></div>
 </div>
 </div>
   </div>

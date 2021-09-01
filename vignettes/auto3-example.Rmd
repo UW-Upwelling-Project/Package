@@ -13,7 +13,7 @@ vignette: >
 knitr::opts_chunk$set(out.width = "70%", fig.align = "center")
 ```
 
-This example shows how work through the points along the 20km coastline and return the upwelling for each day in the year. See `vignette("Auto Upwelling Detection 3", package="imageryML")` for how to do this for one year. This vignette is just the code.
+This example shows how work through the points along the 20km coastline and return the upwelling for each day in the year. See `vignette("auto3")` for how to do this for one year. This vignette is just the code.
 
 Load the needed packages for plotting and data.
 ```{r message=FALSE, warning=FALSE}
@@ -23,8 +23,6 @@ require(magrittr) # for %>%
 ```
 
 # Download the data
-
-## Download from ERDDAP
 
 Set region lat-lon of interest.
 ```{r}
@@ -53,9 +51,7 @@ for (yr in 1982:2020) {
 }
 ```
 
-## Function to process raw data frame
-
-## Process data
+## Process raw data
 
 Notice that I substract 360 off the longitudes. **This is crucial.** The standard projections use this location for the 0 longitude line.
 
@@ -92,7 +88,7 @@ processDF <- function(df_raw) {
 
 ## Set up needed lines and raster
 
-Need to create a sample raster on the Winkel Tripel projection (what the buffer 300km line is in) and then get its bounding box and crop our 300km line to that.
+Need to create a sample raster on the Winkel Tripel projection (what the buffer 300km line is in) and then get its bounding box and crop our 300km line to that. `vignette("data")` describes the 300km, 20km and sample points data sets.
 ```{r message=FALSE}
 efil <- "erddap_2010-01-01_2010-12-31_lat_40.625_50.625_lon_229.875_236.625.csv"
 filename = system.file("extdata", efil, package = "imageryML")
@@ -157,3 +153,9 @@ save(final_df_wlatlon, file=file_name)
 ## Summary
 
 `final_df_wlatlon` now has the upwelling logical value for each day from 1982 to 2020. This data frame is save in `extdata` as `final_df_wlatlon.rda`. This data.frame can be used for making heatmaps and contour maps of the upwelling timing.
+
+Available at
+```{r}
+filename = system.file("extdata", "final_df_wlatlon.rda", package = "imageryML")
+```
+

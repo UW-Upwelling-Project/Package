@@ -70,6 +70,8 @@ df_processed <- df_raw %>%
 
 # Get upwelling
 
+## Step 1 Prepare raster
+
 Now we can apply this to a set of points in our area of interest (WA/OR). Note the raster is on a lat-lon grid. The auto-upwelling code is going to convert that to a meter projection (Winkel Tripel).
 
 ```{r include=FALSE}
@@ -82,7 +84,11 @@ r <- x %>% dplyr::select(lon, lat, sst) %>% raster::rasterFromXYZ(crs="+proj=lon
 plot(r) # needs raster package loaded
 ```
 
-Our sample points are for the whole world. We need to crop that down to our raster bounding box, but we need the raster in the same projection as the points. It looks a bit wonky, since `+lon_0=0` (way over in Europe) in `raster::crs(r.wintri)`. We could re-project it with `+lon_0=-12500` and it'd look better but that would not preserve the distances in the saved 300km and 20km lines.
+## Step 2 Prepare the lines and points
+
+The **imageryML** package includes the 300km lines parallel to the coast, the 20km line parallel to the coast and sample points along that line that are 100km apart. `vignette("data")` shows how the lines and points were created.
+
+The sample points are for the whole world. We need to crop that down to our raster bounding box, but we need the raster in the same projection as the points. It looks a bit wonky, since `+lon_0=0` (way over in Europe) in `raster::crs(r.wintri)`. We could re-project it with `+lon_0=-12500` and it'd look better but that would not preserve the distances in the saved 300km and 20km lines.
 
 ```{r include=FALSE}
 figcap <- paste("*Figure. The SST raster projected into the Winkel Tripel projection which is in meters, not lat-lon degrees. The coast sample points separated by 100km along the coast are shown.*")
@@ -95,6 +101,8 @@ plot(r.wintri)
 plot(coast.pts, add=TRUE)
 plot(buffer300$wintri$line, col="blue", add=TRUE)
 ```
+
+## Step 3 Auto-detection
 
 Now apply the auto detection.
 ```{r}
@@ -156,3 +164,7 @@ plot(out$coast.pts, add=TRUE, pch=19, col=cols)
 plot(out$offshore.pts, add=TRUE, pch=1)
 title("coast points and corresponding offshore points")
 ```
+
+# Summary
+
+These steps can be repeated for each day of the year 1982 to 2020 to create the data frame with the location versus date upwelling information.
