@@ -4,32 +4,25 @@
 \alias{getStatsAroundPoint}
 \title{Get the mean raster values around a point}
 \usage{
-getStatsAroundPoint(
-  p,
-  r,
-  d = 100,
-  units = "km",
-  crs.to.use = crs.wintri,
-  fun = "mean"
-)
+getStatsAroundPoint(p, r, d = 100, na.rm = FALSE)
 }
 \arguments{
 \item{p}{the points as a \code{sp::SpatialPoints} object}
 
 \item{r}{the raster as a \code{raster::raster} object}
 
-\item{d}{distance from the coastline}
+\item{d}{distance to average around the point. Distance is in the units of the points and raster objects}
 
-\item{units}{what units the distance is in}
-
-\item{crs.to.use}{name of the projection. must be one that
-the \strong{sp} package recognizes.}
+\item{na.rm}{whether to remove NAs in the raster when computing the average}
 }
 \value{
-raster value at the points
+raster values around the points
 }
 \description{
 This is applies \code{raster::extract()} but does some checking on the projection
-of the inputs.
+of the inputs. Set \code{d=0} to get value at the points.
 }
-\keyword{image}
+\seealso{
+\code{\link{checkunits}()}
+}
+\keyword{auto}

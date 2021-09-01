@@ -1,6 +1,6 @@
 #' Make a coastline buffer
 #'
-#' Make a line that is parallel to the world's coastlines at a specific distance
+#' Make a line that is parallel to the world's coastlines at a specific distance. See \code{vignette("Smooth Coastline Data")} for how these data were created for the package.
 #'
 #' @param d distance from the coastline
 #' @param units what units the distance is in
@@ -10,7 +10,7 @@
 #' polygons are removed
 #' 
 #' @return a list with a SpatialPolygons, SpatialLines and dataframe object
-#' @keywords image
+#' @keywords auto
 #' @export
 makeCoastBuffer <- function(d = 300, units = "km", crs.to.use = "wintri", remove.holes = TRUE) {
   world <- rnaturalearth::ne_countries(scale = "small", returnclass = "sp")

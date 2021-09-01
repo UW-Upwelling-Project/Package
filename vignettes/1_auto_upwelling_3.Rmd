@@ -1,0 +1,158 @@
+---
+title: "Auto Upwelling Detection 3"
+author: "Eli Holmes"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Auto Upwelling Detection 3}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(out.width = "70%", fig.align = "center")
+```
+
+This example shows how work through the points along the 20km coastline and return the stats for each point.
+
+The **imageryML** package our coastline, coastal sample points and the offshore 300km line. `smoothCoastData`
+
+
+Load the needed packages for plotting and data.
+```{r message=FALSE, warning=FALSE}
+require(raster)
+require(imageryML) # the data
+require(magrittr) # for %>%
+```
+
+# Load the data and process
+
+## Download from ERDDAP
+
+```{r eval=FALSE}
+import_erddap("2010-01-01", "2010-12-31", min_lat = 40.625, max_lat = 50.625, min_lon = 229.875, max_lon = 236.625)
+```
+
+## Load
+
+```{r message=FALSE, warning=FALSE}
+efil <- "erddap_2010-01-01_2010-12-31_lat_40.625_50.625_lon_229.875_236.625.csv"
+filename = system.file("extdata", efil, package = "imageryML")
+df_raw <- readr::read_csv(filename)
+```
+
+## Process data
+
+Notice that I substract 360 off the longitudes. The standard projects have a different location of longitude 0.
+
+```{r}
+df_processed <- df_raw %>% 
+  # Get rid of miscellaneous zlev in first row
+  dplyr::slice(-1) %>% 
+  # zlev is a column of zeroes, so get rid of that
+  dplyr::select(-zlev) %>% 
+  # Convert into date
+  dplyr::mutate(time = lubridate::ymd_hms(time),
+         # Extract out day so I can just filter for first day in each month
+         day = lubridate::day(time)) %>% 
+  dplyr::select(-day) %>% 
+  # Set column names
+  dplyr::rename(date = time,
+         lat = latitude,
+         lon = longitude) %>% 
+  # Convert date column to Date type
+  dplyr::mutate(date = as.Date(date),
+         lat = as.numeric(lat),
+         lon = as.numeric(lon) - 360,
+         sst = as.numeric(sst))
+```
+
+
+# Get upwelling
+
+Now we can apply this to a set of points in our area of interest (WA/OR). Note the raster is on a lat-lon grid. The auto-upwelling code is going to convert that to a meter projection (Winkel Tripel).
+
+```{r include=FALSE}
+figcap <- paste("*Figure. The SST raster shown with longlat projection (lat-lon grid).*")
+```
+```{r fig.cap=figcap}
+custom_date <- "2010-08-04"
+x <- df_processed %>% dplyr::filter(date == custom_date)
+r <- x %>% dplyr::select(lon, lat, sst) %>% raster::rasterFromXYZ(crs="+proj=longlat")
+plot(r) # needs raster package loaded
+```
+
+Our sample points are for the whole world. We need to crop that down to our raster bounding box, but we need the raster in the same projection as the points. It looks a bit wonky, since `+lon_0=0` (way over in Europe) in `raster::crs(r.wintri)`. We could re-project it with `+lon_0=-12500` and it'd look better but that would not preserve the distances in the saved 300km and 20km lines.
+
+```{r include=FALSE}
+figcap <- paste("*Figure. The SST raster projected into the Winkel Tripel projection which is in meters, not lat-lon degrees. The coast sample points separated by 100km along the coast are shown.*")
+```
+```{r fig.cap=figcap}
+r.wintri <- raster::projectRaster(r, crs=raster::crs(sample_points$km100, asText=TRUE), over=TRUE)
+coast.pts <- raster::crop(sample_points$km100, 
+                       raster::bbox(raster::trim(r.wintri)))
+plot(r.wintri)
+plot(coast.pts, add=TRUE)
+plot(buffer300$wintri$line, col="blue", add=TRUE)
+```
+
+Now apply the auto detection.
+```{r}
+eval.time <- system.time(
+  out <- autoDetect3(x, threshold = 2, val="sst", na.rm=FALSE)
+  )[1]
+```
+
+```{r include=FALSE}
+figcap <- paste("*Figure. Coast points and corresponding offshore points.", 
+                ifelse(out$smooth.method != "none", "Offshore line is smoothed so points won't fall on line.", "Offshore line is not smoothed."), "The average SST in a circle of radius", out$d.offshore, "was used. The grey points are cases where there is not upwelling estimate since the offshore point includes NAs. The red points are upwelling and black points are no upwelling.*")
+```
+```{r fig.cap=figcap}
+plot(r.wintri)
+plot(buffer300$wintri$line, add=TRUE)
+plot(buffer20$wintri$line, add=TRUE)
+cols <- ifelse(out$df$upwelling, "red", "black")
+cols[is.na(cols)] <- "grey"
+plot(out$coast.pts, add=TRUE, pch=19, col=cols)
+plot(out$offshore.pts, add=TRUE, pch=1)
+title("coast points and corresponding offshore points")
+```
+
+It will look bad with the longitude 0 line so far east, but if we reproject then distances will be warped and our 300km line will no longer be 300km from the coast.
+```{r fig.cap=figcap}
+newcrs <- "+proj=wintri +lon_0=-125 +lat_1=0 +x_0=0 +y_0=0 +datum=WGS84 +units=km +no_defs"
+plot(raster::projectRaster(r, crs=newcrs), asp=1)
+plot(sp::spTransform(buffer300$wintri$line, newcrs), add=TRUE)
+plot(sp::spTransform(buffer20$wintri$line, newcrs), add=TRUE)
+title("reprojecting will change distances")
+```
+
+One problem is that the `getNearestPointOnLine()` function is running the smoothing operation on the 300km line and the **maptools** nearest point on segment function has to work on the whole world 300km line. That step is slow (time = `r eval.time` seconds). We can speed things up by using a pre-smoothed line and cropping our 300km line to the extent of our raster.
+
+```{r}
+# smooth. Need to do this on the whole world
+l.offshore <- smoothr::smooth(buffer300$wintri$line, method="ksmooth", smoothness=5)
+# crop smooth line to our raster. need to project raster to the same projection
+# as the 300km line
+l.offshore <- raster::crop(l.offshore, raster::bbox(r.wintri))
+eval.time <- system.time(
+  out <- autoDetect3(x, l.offshore = l.offshore, threshold = 2, val="sst", smooth.method="none")
+  )[1]
+```
+
+Now this is much faster. Time = `r eval.time` in seconds.
+
+```{r include=FALSE}
+figcap <- paste("*Figure. Coast points and corresponding offshore points, using cropped 300km line which speeds up the calculations.", 
+                ifelse(out$smooth.method != "none", "Offshore line is smoothed so points won't fall on line.", "Offshore line is not smoothed."), "The average SST in a circle of radius", out$d.offshore, "was used. The grey points are cases where there is not upwelling estimate since the offshore point includes NAs. The red points are upwelling and black points are no upwelling.*")
+```
+```{r fig.cap=figcap}
+plot(r.wintri)
+plot(buffer300$wintri$line, add=TRUE)
+plot(buffer20$wintri$line, add=TRUE)
+cols <- ifelse(out$df$upwelling, "red", "black")
+cols[is.na(cols)] <- "grey"
+plot(out$coast.pts, add=TRUE, pch=19, col=cols)
+plot(out$offshore.pts, add=TRUE, pch=1)
+title("coast points and corresponding offshore points")
+```

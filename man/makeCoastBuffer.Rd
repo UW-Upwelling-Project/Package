@@ -26,6 +26,6 @@ polygons are removed}
 a list with a SpatialPolygons, SpatialLines and dataframe object
 }
 \description{
-Make a line that is parallel to the world's coastlines at a specific distance
+Make a line that is parallel to the world's coastlines at a specific distance. See \code{vignette("Smooth Coastline Data")} for how these data were created for the package.
 }
-\keyword{image}
+\keyword{auto}

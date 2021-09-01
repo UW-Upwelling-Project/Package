@@ -1,47 +1,36 @@
 #' Get the mean raster values around a point
 #'
 #' This is applies `raster::extract()` but does some checking on the projection
-#' of the inputs.
+#' of the inputs. Set `d=0` to get value at the points.
 #'
 #' @param p the points as a `sp::SpatialPoints` object
 #' @param r the raster as a `raster::raster` object
-#' @param d distance from the coastline
-#' @param units what units the distance is in
-#' @param crs.to.use name of the projection. must be one that
-#' the **sp** package recognizes.
+#' @param d distance to average around the point. Distance is in the units of the points and raster objects
+#' @param na.rm whether to remove NAs in the raster when computing the average
+#' 
+#' @seealso \code{\link{checkunits}()}
 #'
-#' @return raster value at the points
-#' @keywords image
+#' @return raster values around the points
+#' @keywords auto
 #' @export
-getStatsAroundPoint <- function(p, r, d = 100, units = "km", crs.to.use = crs.wintri, fun = "mean") {
+getStatsAroundPoint <- function(p, r, d = 100, na.rm=FALSE) {
   # make sure the units are right
-  crs.to.use <- checkunits(crs.to.use, units)$crs
   if (!inherits(p, "SpatialPoints")) stop("pts should be a SpatialPoints object")
-  if (!inherits(r, "raster")) stop("r should be a raster")
-  mpts <- p
-  if (!identical(crs(mpts), crs.to.use)) mpts <- sp::spTransform(mpts, crs.to.use)
-  mras <- r
-  if (!identical(crs(mras), crs.to.use)) mras <- raster::projectRaster(mras, crs = crs.to.use, over = TRUE)
-  circle_pt <- raster::buffer(mpts, width = d)
-  vals <- raster::extract(mras, circle_pt)
-  val <- c()
-  for (i in 1:length(vals)) val <- c(val, do.call(fun, vals[[i]], na.rm = TRUE))
-  return(val)
-}
+  if (!inherits(r, "RasterLayer")) stop("r should be a raster")
+  if (!identical(crs(p), crs(r))) stop("points and raster don't have the same projection")
+  if(stringr::str_detect(crs(r), "longlat")) message("raster is in longlat. you probably want projection in meters.\n")
 
-checkunits <- function(x, units = "m") {
-  if (stringr::str_detect(x, "proj=longlat")) stop("units only applicable for projection in meters")
-  x <- stringr::str_trim(stringr::str_split(x, " ")[[1]])
-  u <- stringr::str_split(x[stringr::str_detect(x, "units")], "=")
-  if (!length(u) == 0) {
-    u <- u[[1]][2]
-    if (identical(u, units)) {
-      return(x)
+    if(d==0){ # Get value at points
+      vals <- raster::extract(r, p)
+      return(vals)
     }
-  } else {
-    u <- units
+    # Get values in circle around points
+    pts <- p@coords
+    vals <- c()
+    for(i in 1:nrow(pts)){
+      pt <- sp::SpatialPoints(pts[i,,drop=FALSE])
+      circle_pt <- raster::buffer(pt, width = d)
+      vals <- c(vals, mean(raster::extract(r, circle_pt)[[1]], na.rm=na.rm))
+    }
+    return(vals)
   }
-  x <- paste(x[!stringr::str_detect(x, "units")], collapse = " ")
-  x <- paste0(x, " +units=", u)
-  return(list(crs = x, units = u))
-}

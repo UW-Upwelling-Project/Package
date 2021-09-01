@@ -5,32 +5,28 @@
 \title{Find nearest point to lines}
 \usage{
 getNearestPointOnLine(
+  l,
   p,
-  l = buffer300.wintri$df,
-  crs.to.use = buffer300.wintri$crs
+  smooth.method = c("ksmooth", "none", "gSimplify"),
+  ...
 )
 }
 \arguments{
-\item{p}{the points as a \code{sp::SpatialPoints} object, dataframe, matrix or vector (one point). If a dataframe or matrix, column 1 is the x locations, column 2 is the y locations. The units and projection of the points need to
-match the lines. If \code{sp::SpatialPoints} is used, this can be checked. Otherwise the user needs to ensure that they match.}
+\item{l}{the lines as a \code{sp::SpatialLines} object.}
 
-\item{l}{the lines as a \code{sp::SpatialPolygons} object, \code{sp::SpatialLines} object, dataframe, matrix or vector (one point).   If a dataframe or matrix, column 1 is the x locations, column 2 is the y locations. If there are multiple lines, the third column should be the id of the lines.}
+\item{p}{the points as a \code{sp::SpatialPoints} object.}
 
-\item{crs.to.use}{name of the projection. must be one that
-the \strong{sp} package recognizes.}
+\item{smooth.method}{type of method to use to smooth the offshore line. This is needed to have the offshore points spread regularly along the line and not be affected by divits.}
+
+\item{...}{parameters to specify smoothing. If "gSimplify", \code{tol=30} is ok. If "ksmooth", \code{smoothness=5} is ok.}
 }
 \value{
 vector of points
 }
 \description{
-This will work if the lines are specified as a \code{sp::SpatialLines} or \code{sp::SpatialPolygon} object. If the latter, the object is converted to a
-\code{sp::SpatialLines} object. It will also
-work if the lines are specified in
-a dataframe (or matrix) with x, y, and id (optional), which is a
-coordinate matrix. The points can be a \code{sp::SpatialPoints} object,
-a dataframe or matrix with each
-row the x-y coordinates with an optional id for multiple lines or it can
-be a vector if it is only one point.
+Lines are specified as a \code{sp::SpatialLines} object. The points are a
+\code{sp::SpatialPoints} object. If there are multiple lines in the lines
+object, the nearest point might be wrong so results should be checked.
 }
 \details{
 Note, the \code{maptools::snapPointsToLines()} function should do this, but it is
@@ -38,7 +34,7 @@ not working with the \code{SpatialLines} object produced by converting a polygon
 to lines. It may work fine if one converts the \code{SpatialPolygon} to
 a \code{SpatialLinesDataFrame} with the proper line id's.
 
-The default behavior is to use the 300km coastline buffer with the
-Winkel Tripel projection.
+If the line is wavey, smoothing can help find points that look more
+perpendicular to the coast.
 }
-\keyword{image}
+\keyword{auto}

@@ -1,5 +1,14 @@
 url: https://uw-upwelling-project.github.io/imageryML/
 
+navbar:
+  structure:
+    left:
+    - home
+    - reference
+    - articles
+    - news
+    right: github
+
 home:
   links:
   - text: Team discussion
@@ -17,6 +26,10 @@ reference:
 - title: Image utilities
 - contents:
   - has_keyword("image")
+- title: Auto-detection
+  desc: Functions for the auto-detection of upwelling
+  contents:
+  - has_keyword("auto")
 - title: Data
   desc: Data
   contents:

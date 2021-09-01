@@ -40,14 +40,9 @@
 
 
 <meta property="og:title" content="Find nearest point to lines — getNearestPointOnLine" />
-<meta property="og:description" content="This will work if the lines are specified as a sp::SpatialLines or sp::SpatialPolygon object. If the latter, the object is converted to a
-sp::SpatialLines object. It will also
-work if the lines are specified in
-a dataframe (or matrix) with x, y, and id (optional), which is a
-coordinate matrix. The points can be a sp::SpatialPoints object,
-a dataframe or matrix with each
-row the x-y coordinates with an optional id for multiple lines or it can
-be a vector if it is only one point." />
+<meta property="og:description" content="Lines are specified as a sp::SpatialLines object. The points are a
+sp::SpatialPoints object. If there are multiple lines in the lines
+object, the nearest point might be wrong so results should be checked." />
 
 
 
@@ -79,7 +74,7 @@ be a vector if it is only one point." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">imageryML</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.3</span>
       </span>
     </div>
 
@@ -93,6 +88,27 @@ be a vector if it is only one point." />
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/10_smooth_data.html">9 Smooth Coastline Data</a>
+    </li>
+    <li>
+      <a href="../articles/1_auto_upwelling_3.html">Auto Upwelling Detection 3</a>
+    </li>
+    <li>
+      <a href="../articles/2_Auto-upwelling-3 1982-2020.html">Auto Upwelling 3 1980-2020</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -121,38 +137,36 @@ be a vector if it is only one point." />
     </div>
 
     <div class="ref-description">
-    <p>This will work if the lines are specified as a <code><a href='https://rdrr.io/pkg/sp/man/SpatialLines.html'>sp::SpatialLines</a></code> or <code>sp::SpatialPolygon</code> object. If the latter, the object is converted to a
-<code><a href='https://rdrr.io/pkg/sp/man/SpatialLines.html'>sp::SpatialLines</a></code> object. It will also
-work if the lines are specified in
-a dataframe (or matrix) with x, y, and id (optional), which is a
-coordinate matrix. The points can be a <code><a href='https://rdrr.io/pkg/sp/man/SpatialPoints.html'>sp::SpatialPoints</a></code> object,
-a dataframe or matrix with each
-row the x-y coordinates with an optional id for multiple lines or it can
-be a vector if it is only one point.</p>
+    <p>Lines are specified as a <code><a href='https://rdrr.io/pkg/sp/man/SpatialLines.html'>sp::SpatialLines</a></code> object. The points are a
+<code><a href='https://rdrr.io/pkg/sp/man/SpatialPoints.html'>sp::SpatialPoints</a></code> object. If there are multiple lines in the lines
+object, the nearest point might be wrong so results should be checked.</p>
     </div>
 
     <pre class="usage"><span class='fu'>getNearestPointOnLine</span><span class='op'>(</span>
+  <span class='va'>l</span>,
   <span class='va'>p</span>,
-  l <span class='op'>=</span> <span class='va'>buffer300.wintri</span><span class='op'>$</span><span class='va'>df</span>,
-  crs.to.use <span class='op'>=</span> <span class='va'>buffer300.wintri</span><span class='op'>$</span><span class='va'>crs</span>
+  smooth.method <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"ksmooth"</span>, <span class='st'>"none"</span>, <span class='st'>"gSimplify"</span><span class='op'>)</span>,
+  <span class='va'>...</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>p</th>
-      <td><p>the points as a <code><a href='https://rdrr.io/pkg/sp/man/SpatialPoints.html'>sp::SpatialPoints</a></code> object, dataframe, matrix or vector (one point). If a dataframe or matrix, column 1 is the x locations, column 2 is the y locations. The units and projection of the points need to
-match the lines. If <code><a href='https://rdrr.io/pkg/sp/man/SpatialPoints.html'>sp::SpatialPoints</a></code> is used, this can be checked. Otherwise the user needs to ensure that they match.</p></td>
-    </tr>
-    <tr>
       <th>l</th>
-      <td><p>the lines as a <code><a href='https://rdrr.io/pkg/sp/man/SpatialPolygons.html'>sp::SpatialPolygons</a></code> object, <code><a href='https://rdrr.io/pkg/sp/man/SpatialLines.html'>sp::SpatialLines</a></code> object, dataframe, matrix or vector (one point).   If a dataframe or matrix, column 1 is the x locations, column 2 is the y locations. If there are multiple lines, the third column should be the id of the lines.</p></td>
+      <td><p>the lines as a <code><a href='https://rdrr.io/pkg/sp/man/SpatialLines.html'>sp::SpatialLines</a></code> object.</p></td>
     </tr>
     <tr>
-      <th>crs.to.use</th>
-      <td><p>name of the projection. must be one that
-the <strong>sp</strong> package recognizes.</p></td>
+      <th>p</th>
+      <td><p>the points as a <code><a href='https://rdrr.io/pkg/sp/man/SpatialPoints.html'>sp::SpatialPoints</a></code> object.</p></td>
+    </tr>
+    <tr>
+      <th>smooth.method</th>
+      <td><p>type of method to use to smooth the offshore line. This is needed to have the offshore points spread regularly along the line and not be affected by divits.</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>parameters to specify smoothing. If "gSimplify", <code>tol=30</code> is ok. If "ksmooth", <code>smoothness=5</code> is ok.</p></td>
     </tr>
     </table>
 
@@ -165,8 +179,8 @@ the <strong>sp</strong> package recognizes.</p></td>
 not working with the <code>SpatialLines</code> object produced by converting a polygon
 to lines. It may work fine if one converts the <code>SpatialPolygon</code> to
 a <code>SpatialLinesDataFrame</code> with the proper line id's.</p>
-<p>The default behavior is to use the 300km coastline buffer with the
-Winkel Tripel projection.</p>
+<p>If the line is wavey, smoothing can help find points that look more
+perpendicular to the coast.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

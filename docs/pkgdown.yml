@@ -1,8 +1,11 @@
 pandoc: 2.11.2
 pkgdown: 1.6.1
 pkgdown_sha: ~
-articles: {}
-last_built: 2021-08-27T23:51Z
+articles:
+  10_smooth_data: 10_smooth_data.html
+  1_auto_upwelling_3: 1_auto_upwelling_3.html
+  2_Auto-upwelling-3 1982-2020: 2_Auto-upwelling-3 1982-2020.html
+last_built: 2021-09-01T21:30Z
 urls:
   reference: https://uw-upwelling-project.github.io/imageryML//reference
   article: https://uw-upwelling-project.github.io/imageryML//articles
