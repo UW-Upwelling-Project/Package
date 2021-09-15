@@ -146,6 +146,7 @@ final_df_wlatlon <- final_df_wlatlon[c("date", "x", "y", "lon", "lat",
 ```
 
 ```{r include=FALSE, eval=FALSE}
+# Not for users. This is for adding the file to the extdata dir.
 file_name <- file.path(here::here(), "inst", "extdata", "final_df_wlatlon.rda")
 save(final_df_wlatlon, file=file_name)
 ```

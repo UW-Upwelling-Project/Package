@@ -3,7 +3,6 @@
 #' @description
 #' Download data from CoastWatch ERDDAP server ncdcOisst21Agg data which is daily
 #' optimal interpolation SST data.
-#' 
 #'  
 #' @param start_date first date
 #' @param stop_date final date
