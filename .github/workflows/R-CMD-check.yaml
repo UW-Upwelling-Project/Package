@@ -30,8 +30,8 @@ jobs:
       - name: Install dependencies
         run: |
           install.packages(c("remotes", "rcmdcheck"))
-          install.packages("rgdal")
           remotes::install_deps(dependencies = TRUE)
+          install.packages("rgdal", type = "binary")
         shell: Rscript {0}
       - name: Check
         run: |
