@@ -4,7 +4,6 @@
 #' upwelling by comparing the SST at a point along a smoothed coast to the average
 #' SST at a point offshore. This uses a smoothed coastline smoothed offshore line,
 #' and coastal sample points that are part of the **imageML** package. See \code{\link{smoothCoastData}}.
-#
 #'
 #' @param x cleaned dataframe. See \code{\link{processOIData}()}.
 #' @param threshold offshore-coast difference for upwelling

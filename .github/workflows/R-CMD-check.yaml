@@ -31,5 +31,11 @@ jobs:
       - name: Check
         run: |
           options(crayon.enabled = TRUE)
-          rcmdcheck::rcmdcheck(args = "--no-manual --no-build-vignettes", error_on = "error")
+          rcmdcheck::rcmdcheck(args = c("--no-manual", "--no-build-vignettes"), error_on = "error", build_args = "--no-build-vignettes")
         shell: Rscript {0}
+
+# Stopping rcmdcheck from running vignettes is hard. See command above.
+# Alternative add
+#   - uses: r-lib/actions/setup-pandoc@v1
+# after r is installed and then use
+# rcmdcheck::rcmdcheck(args = "--no-manual", error_on = "error")
