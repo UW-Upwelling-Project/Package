@@ -222,7 +222,7 @@
 <em>Figure. Coast points and corresponding offshore points. Offshore line is smoothed so points won’t fall on line. The average SST in a circle of radius 50 was used. The grey points are cases where there is not upwelling estimate since the offshore point includes NAs. The red points are upwelling and black points are no upwelling.</em>
 </p>
 </div>
-<p>One problem is that the <code><a href="../reference/getNearestPointOnLine.html">getNearestPointOnLine()</a></code> function is running the smoothing operation on the 300km line and the <strong>maptools</strong> nearest point on segment function has to work on the whole world 300km line. That step is slow (time = 7.483 seconds). We can speed things up by using a pre-smoothed line and cropping our 300km line to the extent of our raster.</p>
+<p>One problem is that the <code><a href="../reference/getNearestPointOnLine.html">getNearestPointOnLine()</a></code> function is running the smoothing operation on the 300km line and the <strong>maptools</strong> nearest point on segment function has to work on the whole world 300km line. That step is slow (time = 7.392 seconds). We can speed things up by using a pre-smoothed line and cropping our 300km line to the extent of our raster.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># smooth. Need to do this on the whole world</span>
 <span class="va">l.offshore</span> <span class="op">&lt;-</span> <span class="fu">smoothr</span><span class="fu">::</span><span class="fu"><a href="https://strimas.com/smoothr/reference/smooth.html">smooth</a></span><span class="op">(</span><span class="va">buffer300</span><span class="op">$</span><span class="va">wintri</span><span class="op">$</span><span class="va">line</span>, method<span class="op">=</span><span class="st">"ksmooth"</span>, smoothness<span class="op">=</span><span class="fl">5</span><span class="op">)</span></code></pre></div>
@@ -235,7 +235,7 @@
 <span class="va">eval.time</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span><span class="op">(</span>
   <span class="va">out</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/autoDetect3.html">autoDetect3</a></span><span class="op">(</span><span class="va">x</span>, l.offshore <span class="op">=</span> <span class="va">l.offshore</span>, threshold <span class="op">=</span> <span class="fl">2</span>, val<span class="op">=</span><span class="st">"sst"</span>, smooth.method<span class="op">=</span><span class="st">"none"</span><span class="op">)</span>
   <span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span></code></pre></div>
-<p>Now this is much faster. Time = 0.53 in seconds.</p>
+<p>Now this is much faster. Time = 0.498 in seconds.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/raster/man/plot.html">plot</a></span><span class="op">(</span><span class="va">r.wintri</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/pkg/raster/man/plot.html">plot</a></span><span class="op">(</span><span class="va">buffer300</span><span class="op">$</span><span class="va">wintri</span><span class="op">$</span><span class="va">line</span>, add<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>
