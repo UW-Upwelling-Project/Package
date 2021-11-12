@@ -13,3 +13,6 @@ Installation:
 devtools::install_github("UW-Upwelling-Project/imageryML")
 ```
 
+Examples:
+
+Go to the pkgdown site and read the [articles](https://uw-upwelling-project.github.io/imageryML/).
