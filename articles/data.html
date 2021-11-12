@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">imageryML</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.4</span>
       </span>
     </div>
 
@@ -54,13 +54,16 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
+      <a href="../articles/data.html">Smooth Coastline Data</a>
+    </li>
+    <li>
       <a href="../articles/auto3.html">Auto Upwelling Detection 3</a>
     </li>
     <li>
       <a href="../articles/auto3-example.html">Auto Upwelling 3 1980-2020</a>
     </li>
     <li>
-      <a href="../articles/data.html">Smooth Coastline Data</a>
+      <a href="../articles/upwelling_zones.html">Upwelling Zones</a>
     </li>
   </ul>
 </li>
@@ -91,7 +94,7 @@
       <h1 data-toc-skip>Smooth Coastline Data</h1>
                         <h4 class="author">Eli Holmes</h4>
             
-            <h4 class="date">2021-09-16</h4>
+            <h4 class="date">2021-11-12</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/UW-Upwelling-Project/imageryML/blob/master/vignettes/data.Rmd"><code>vignettes/data.Rmd</code></a></small>
       <div class="hidden name"><code>data.Rmd</code></div>
@@ -100,7 +103,7 @@
 
     
     
-<p>This example shows how the data in the package were created and saved.</p>
+<p>This example shows how the data in the package were created and saved. The details for how to do these calculations is in the articles in the <a href="https://ocean-satellite-tools.github.io/basics/">basics</a> package in my ocean satellite tools org.</p>
 <p>Specify where to save the downloaded data. Data from a <code>rerddap::griddap()</code> call can be verbose, so you’ll probably want a folder for it.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fil_dir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html">here</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"inst"</span>, <span class="st">"extdata"</span><span class="op">)</span>
@@ -142,6 +145,10 @@
 <span class="va">world</span> <span class="op">&lt;-</span> <span class="fu">rgeos</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/rgeos/man/topo-bin-gUnion.html">gUnaryUnion</a></span><span class="op">(</span><span class="va">world</span><span class="op">)</span></code></pre></div>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">world.wintri</span> <span class="op">&lt;-</span> <span class="fu">sp</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/sp/man/spTransform.html">spTransform</a></span><span class="op">(</span><span class="va">world</span>, <span class="va">crs.wintri</span><span class="op">)</span></code></pre></div>
+</div>
+<div id="this-part-goes-through-and-only-saves-big-polygons-to-get-rid-of-little-islands" class="section level1">
+<h1 class="hasAnchor">
+<a href="#this-part-goes-through-and-only-saves-big-polygons-to-get-rid-of-little-islands" class="anchor"></a>This part goes through and only saves big polygons to get rid of little islands</h1>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">world.wintri</span><span class="op">@</span><span class="va">polygons</span> , <span class="va">slot</span> , <span class="st">"Polygons"</span><span class="op">)</span>
 <span class="va">big</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html">log</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">p</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu">methods</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/methods/slot.html">slot</a></span><span class="op">(</span><span class="va">x</span>, <span class="st">"area"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">14</span>
@@ -151,21 +158,23 @@
 <span class="va">trim.world.wintri</span><span class="op">@</span><span class="va">polygons</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">@</span><span class="va">plotOrder</span> <span class="op">&lt;-</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">trim.world.wintri</span><span class="op">@</span><span class="va">polygons</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">@</span><span class="va">Polygons</span><span class="op">)</span>
 <span class="fu">slot</span><span class="op">(</span><span class="va">trim.world.wintri</span>, <span class="st">"polygons"</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="fu">methods</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/methods/slot.html">slot</a></span><span class="op">(</span><span class="va">trim.world.wintri</span>, <span class="st">"polygons"</span><span class="op">)</span>,
    <span class="st">"comment&lt;-"</span>, <span class="cn">NULL</span><span class="op">)</span></code></pre></div>
+<p>Here is a plot where the smaller polygons (grey) have been trimmed.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/raster">raster</a></span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/UW-Upwelling-Project/imageryML">imageryML</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/raster">raster</a></span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/pkg/raster/man/plot.html">plot</a></span><span class="op">(</span><span class="va">world.wintri</span>, col<span class="op">=</span><span class="st">"grey"</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/pkg/raster/man/plot.html">plot</a></span><span class="op">(</span><span class="va">trim.world.wintri</span>, col<span class="op">=</span><span class="st">"green"</span>, add<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
-</div>
+<p><img src="data_files/figure-html/unnamed-chunk-9-1.png" width="70%" style="display: block; margin: auto;"></p>
 <div id="km-offshore-line" class="section level2">
 <h2 class="hasAnchor">
 <a href="#km-offshore-line" class="anchor"></a>300 km offshore line</h2>
-<p>Note, the units for <code>world.wintri</code> were set to km. It is important that this code is run on a polygon in a meter as opposed to longlat projection.</p>
+<p>Note, the units for <code>world.wintri</code> were set to km. It is important that this code is run on a polygon in a meter projection as opposed to a long-lat projection.</p>
+<p>The first polygon in the <code>world</code> object is the North-South American polygon. I am only going to use that one here.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">buffer300</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="op">)</span>
 <span class="va">polys</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>wintri<span class="op">=</span><span class="va">world.wintri</span>, trim.wintri<span class="op">=</span><span class="va">trim.world.wintri</span><span class="op">)</span>
 <span class="kw">for</span><span class="op">(</span><span class="va">j</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">polys</span><span class="op">)</span><span class="op">)</span><span class="op">{</span>
-  <span class="va">p</span> <span class="op">&lt;-</span> <span class="va">polys</span><span class="op">[[</span><span class="va">j</span><span class="op">]</span><span class="op">]</span>
-<span class="va">world.poly</span> <span class="op">&lt;-</span> <span class="va">world.wintri</span>
+<span class="va">world.poly</span> <span class="op">&lt;-</span> <span class="va">polys</span><span class="op">[[</span><span class="va">j</span><span class="op">]</span><span class="op">]</span>
 <span class="va">buff1</span> <span class="op">&lt;-</span> <span class="fu">rgeos</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/rgeos/man/misc-gBuffer.html">gBuffer</a></span><span class="op">(</span><span class="va">world.poly</span>, width <span class="op">=</span> <span class="fl">300</span>, byid <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 <span class="co"># erase the inner world polygon</span>
 <span class="va">e</span> <span class="op">&lt;-</span> <span class="fu">raster</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/raster/man/erase.html">erase</a></span><span class="op">(</span><span class="va">buff1</span>, <span class="va">world.poly</span><span class="op">)</span>
@@ -193,15 +202,23 @@
 <span class="op">}</span>
 <span class="va">tmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>line <span class="op">=</span> <span class="va">el</span>, df <span class="op">=</span> <span class="va">df</span>, crs <span class="op">=</span> <span class="va">crs.wintri</span><span class="op">)</span>
 <span class="va">buffer300</span><span class="op">[[</span><span class="st">"wintri.smooth"</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">tmp</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/raster/man/plot.html">plot</a></span><span class="op">(</span><span class="va">trim.world.wintri</span>, col<span class="op">=</span><span class="st">"grey"</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/pkg/raster/man/plot.html">plot</a></span><span class="op">(</span><span class="va">buffer300</span><span class="op">[[</span><span class="st">"wintri.smooth"</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="st">"line"</span><span class="op">]</span><span class="op">]</span>, add <span class="op">=</span> <span class="cn">TRUE</span>, col<span class="op">=</span><span class="st">"red"</span><span class="op">)</span></code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="data_files/figure-html/unnamed-chunk-12-1.png" alt="*Red line is the 300km offshore line.*" width="70%"><p class="caption">
+<em>Red line is the 300km offshore line.</em>
+</p>
+</div>
 </div>
 <div id="make-20km-coast-line" class="section level2">
 <h2 class="hasAnchor">
 <a href="#make-20km-coast-line" class="anchor"></a>Make 20km coast line</h2>
 <p>Only Holes function direct adaptation from <code><a href="https://rdrr.io/pkg/spatialEco/man/remove.holes.html">spatialEco::remove.holes()</a></code></p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">only.holes</span> <span class="op">&lt;-</span> <span class="kw">function</span> <span class="op">(</span><span class="va">x</span><span class="op">)</span> 
 <span class="op">{</span>
-  <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/any.html">any</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/which.html">which</a></span><span class="op">(</span><span class="fu">utils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/utils/installed.packages.html">installed.packages</a></span><span class="op">(</span><span class="op">)</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span> <span class="op">%in%</span> <span class="st">"maptools"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> 
+  <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/any.html">any</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/which.html">which</a></span><span class="op">(</span><span class="fu">utils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/utils/installed.packages.html">installed.packages</a></span><span class="op">(</span><span class="op">)</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span> <span class="op"><a href="https://rdrr.io/pkg/raster/man/match.html">%in%</a></span> <span class="st">"maptools"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> 
     <span class="kw"><a href="https://rdrr.io/r/base/stop.html">stop</a></span><span class="op">(</span><span class="st">"please install maptools package before running this function"</span><span class="op">)</span>
   <span class="va">xp</span> <span class="op">&lt;-</span> <span class="fu">slot</span><span class="op">(</span><span class="va">x</span>, <span class="st">"polygons"</span><span class="op">)</span>
   <span class="va">holes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">xp</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">sapply</a></span><span class="op">(</span><span class="fu">methods</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/methods/slot.html">slot</a></span><span class="op">(</span><span class="va">x</span>, <span class="st">"Polygons"</span><span class="op">)</span>, 
@@ -220,13 +237,13 @@
                                                             ID <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">pids</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
   <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">x.fill</span><span class="op">)</span>
 <span class="op">}</span></code></pre></div>
-<p>Create buffer 280 km around the 300km line. Note because we are doing this around a line, we don’t need to erase the inner polygon as we had to do for the 300km line.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<p>Create buffer 280 km around the 300km line. Note because we are doing this around a line, we don’t need to erase the inner polygon as we had to do for the 300km line. Again this is only for the North-South America polygon.</p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">buffer20</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="op">)</span>
 <span class="va">polys</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>wintri<span class="op">=</span><span class="va">buffer300</span><span class="op">$</span><span class="va">wintri</span><span class="op">$</span><span class="va">line</span>, trim.wintri<span class="op">=</span><span class="va">buffer300</span><span class="op">$</span><span class="va">trim.wintri</span><span class="op">$</span><span class="va">line</span><span class="op">)</span>
 <span class="kw">for</span><span class="op">(</span><span class="va">j</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">polys</span><span class="op">)</span><span class="op">)</span><span class="op">{</span>
-  <span class="va">p</span> <span class="op">&lt;-</span> <span class="va">polys</span><span class="op">[[</span><span class="va">j</span><span class="op">]</span><span class="op">]</span>
-<span class="va">buff20</span> <span class="op">&lt;-</span> <span class="fu">rgeos</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/rgeos/man/misc-gBuffer.html">gBuffer</a></span><span class="op">(</span><span class="va">el300</span>, width<span class="op">=</span><span class="fl">280</span><span class="op">)</span>
+  <span class="va">p</span> <span class="op">&lt;-</span> <span class="va">polys</span><span class="op">[[</span><span class="va">j</span><span class="op">]</span><span class="op">]</span> <span class="co"># really line not poly</span>
+<span class="va">buff20</span> <span class="op">&lt;-</span> <span class="fu">rgeos</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/rgeos/man/misc-gBuffer.html">gBuffer</a></span><span class="op">(</span><span class="va">p</span>, width<span class="op">=</span><span class="fl">280</span><span class="op">)</span>
 <span class="co"># Remove the outer part of the polygons and make into lines.</span>
 <span class="va">e20</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/only.holes.html">only.holes</a></span><span class="op">(</span><span class="va">buff20</span><span class="op">)</span>
 <span class="va">el20</span> <span class="op">&lt;-</span> <span class="fu">methods</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/methods/as.html">as</a></span><span class="op">(</span><span class="va">e20</span>, <span class="st">"SpatialLines"</span><span class="op">)</span>
@@ -239,44 +256,62 @@
 <span class="va">tmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>line <span class="op">=</span> <span class="va">el20</span>, polygon <span class="op">=</span> <span class="va">e20</span>, df <span class="op">=</span> <span class="va">df</span>, crs <span class="op">=</span> <span class="va">crs.wintri</span><span class="op">)</span>
 <span class="va">buffer20</span><span class="op">[[</span><span class="fu"><a href="https://rdrr.io/pkg/raster/man/names.html">names</a></span><span class="op">(</span><span class="va">polys</span><span class="op">)</span><span class="op">[</span><span class="va">j</span><span class="op">]</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">tmp</span>
 <span class="op">}</span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/raster/man/plot.html">plot</a></span><span class="op">(</span><span class="va">trim.world.wintri</span>, col<span class="op">=</span><span class="st">"grey"</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/pkg/raster/man/plot.html">plot</a></span><span class="op">(</span><span class="va">buffer300</span><span class="op">[[</span><span class="st">"trim.wintri"</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="st">"line"</span><span class="op">]</span><span class="op">]</span>, add <span class="op">=</span> <span class="cn">TRUE</span>, col<span class="op">=</span><span class="st">"red"</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/pkg/raster/man/plot.html">plot</a></span><span class="op">(</span><span class="va">buffer20</span><span class="op">[[</span><span class="st">"trim.wintri"</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="st">"line"</span><span class="op">]</span><span class="op">]</span>, add <span class="op">=</span> <span class="cn">TRUE</span>, col<span class="op">=</span><span class="st">"blue"</span><span class="op">)</span></code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="data_files/figure-html/unnamed-chunk-15-1.png" alt="*Red line is the 300km offshore line. Blue line is the 20km offshore line.*" width="70%"><p class="caption">
+<em>Red line is the 300km offshore line. Blue line is the 20km offshore line.</em>
+</p>
+</div>
+<p>We can plot the “trim” lines (islands removed) and see that the trim line will run through islands. Depending on the goal, that may or may not be a problem.</p>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/raster/man/plot.html">plot</a></span><span class="op">(</span><span class="va">sample_raster</span><span class="op">$</span><span class="va">raster.wintri</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/pkg/raster/man/plot.html">plot</a></span><span class="op">(</span><span class="va">world.wintri</span>, col<span class="op">=</span><span class="st">"grey"</span>, add<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/pkg/raster/man/plot.html">plot</a></span><span class="op">(</span><span class="va">sample_raster</span><span class="op">$</span><span class="va">raster.wintri</span>, add<span class="op">=</span><span class="cn">TRUE</span>, alpha<span class="op">=</span><span class="fl">0.75</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/pkg/raster/man/plot.html">plot</a></span><span class="op">(</span><span class="va">buffer20</span><span class="op">[[</span><span class="st">"trim.wintri"</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="st">"line"</span><span class="op">]</span><span class="op">]</span>, add<span class="op">=</span><span class="cn">TRUE</span>, col<span class="op">=</span><span class="st">"red"</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/pkg/raster/man/plot.html">plot</a></span><span class="op">(</span><span class="va">buffer20</span><span class="op">[[</span><span class="st">"wintri"</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="st">"line"</span><span class="op">]</span><span class="op">]</span>, add<span class="op">=</span><span class="cn">TRUE</span>, col<span class="op">=</span><span class="st">"blue"</span><span class="op">)</span></code></pre></div>
+<p><img src="data_files/figure-html/unnamed-chunk-16-1.png" width="70%" style="display: block; margin: auto;"></p>
 </div>
 <div id="coast-sample-locations-every-100km" class="section level2">
 <h2 class="hasAnchor">
 <a href="#coast-sample-locations-every-100km" class="anchor"></a>Coast sample locations every 100km</h2>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">numOfPoints</span>  <span class="op">&lt;-</span>  <span class="fu">rgeos</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/rgeos/man/misc-gLength.html">gLength</a></span><span class="op">(</span><span class="va">el20</span><span class="op">)</span> <span class="op">/</span> <span class="fl">100</span>
-<span class="va">sample.pts.100km</span> <span class="op">&lt;-</span> <span class="fu">sp</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/sp/man/spsample.html">spsample</a></span><span class="op">(</span><span class="va">el20</span>, n <span class="op">=</span> <span class="va">numOfPoints</span>, type <span class="op">=</span> <span class="st">"regular"</span><span class="op">)</span>
-<span class="va">sample.pts.off.100km</span> <span class="op">&lt;-</span> <span class="fu">sp</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/sp/man/spsample.html">spsample</a></span><span class="op">(</span><span class="va">el300</span>, n <span class="op">=</span> <span class="va">numOfPoints</span>, type <span class="op">=</span> <span class="st">"regular"</span><span class="op">)</span>
-<span class="va">sample_points</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>km100<span class="op">=</span><span class="va">sample.pts.100km</span>, off.km100<span class="op">=</span><span class="va">sample.pts.off.100km</span><span class="op">)</span></code></pre></div>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/raster/man/plot.html">plot</a></span><span class="op">(</span><span class="va">sample_raster</span><span class="op">$</span><span class="va">raster.wintri</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/pkg/raster/man/plot.html">plot</a></span><span class="op">(</span><span class="va">el300</span>, add<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/pkg/raster/man/plot.html">plot</a></span><span class="op">(</span><span class="va">el20</span>, add<span class="op">=</span><span class="cn">TRUE</span>, col<span class="op">=</span><span class="st">"red"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/pkg/raster/man/plot.html">plot</a></span><span class="op">(</span><span class="va">sample.pts.100km</span>, add<span class="op">=</span><span class="cn">TRUE</span>, pch<span class="op">=</span><span class="fl">1</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/pkg/raster/man/plot.html">plot</a></span><span class="op">(</span><span class="va">sample.pts.off.100km</span>, add<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/pkg/raster/man/text.html">text</a></span><span class="op">(</span><span class="va">sample.pts.100km</span><span class="op">@</span><span class="va">coords</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span>, <span class="va">sample.pts.100km</span><span class="op">@</span><span class="va">coords</span><span class="op">[</span>,<span class="fl">2</span><span class="op">]</span>, <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/pkg/raster/man/ncell.html">nrow</a></span><span class="op">(</span><span class="va">sample.pts.100km</span><span class="op">@</span><span class="va">coords</span><span class="op">)</span>, adj<span class="op">=</span><span class="op">-</span><span class="fl">1</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/pkg/raster/man/text.html">text</a></span><span class="op">(</span><span class="va">sample.pts.off.100km</span><span class="op">@</span><span class="va">coords</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span>, <span class="va">sample.pts.off.100km</span><span class="op">@</span><span class="va">coords</span><span class="op">[</span>,<span class="fl">2</span><span class="op">]</span>, <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/pkg/raster/man/ncell.html">nrow</a></span><span class="op">(</span><span class="va">sample.pts.off.100km</span><span class="op">@</span><span class="va">coords</span><span class="op">)</span>, adj<span class="op">=</span><span class="fl">1</span><span class="op">)</span></code></pre></div>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/raster/man/plot.html">plot</a></span><span class="op">(</span><span class="va">e300</span><span class="op">)</span>
-<span class="va">bb</span> <span class="op">&lt;-</span> <span class="fu">raster</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/raster/man/drawExtent.html">drawExtent</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<p>Next we want to sample the points every 100km along the coast.</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/raster/man/plot.html">plot</a></span><span class="op">(</span><span class="fu">raster</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/raster/man/crop.html">crop</a></span><span class="op">(</span><span class="va">el300</span>, <span class="va">bb</span><span class="op">)</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/pkg/raster/man/plot.html">plot</a></span><span class="op">(</span><span class="va">el20</span>, add<span class="op">=</span><span class="cn">TRUE</span>, col<span class="op">=</span><span class="st">"red"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/pkg/raster/man/plot.html">plot</a></span><span class="op">(</span><span class="va">sample.pts.100km</span>, add<span class="op">=</span><span class="cn">TRUE</span>, pch<span class="op">=</span><span class="fl">1</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/pkg/raster/man/plot.html">plot</a></span><span class="op">(</span><span class="va">sample.pts.off.100km</span>, add<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/pkg/raster/man/text.html">text</a></span><span class="op">(</span><span class="va">sample.pts.100km</span><span class="op">@</span><span class="va">coords</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span>, <span class="va">sample.pts.100km</span><span class="op">@</span><span class="va">coords</span><span class="op">[</span>,<span class="fl">2</span><span class="op">]</span>, <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/pkg/raster/man/ncell.html">nrow</a></span><span class="op">(</span><span class="va">sample.pts.100km</span><span class="op">@</span><span class="va">coords</span><span class="op">)</span>, adj<span class="op">=</span><span class="op">-</span><span class="fl">1</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/pkg/raster/man/text.html">text</a></span><span class="op">(</span><span class="va">sample.pts.off.100km</span><span class="op">@</span><span class="va">coords</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span>, <span class="va">sample.pts.off.100km</span><span class="op">@</span><span class="va">coords</span><span class="op">[</span>,<span class="fl">2</span><span class="op">]</span>, <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/pkg/raster/man/ncell.html">nrow</a></span><span class="op">(</span><span class="va">sample.pts.off.100km</span><span class="op">@</span><span class="va">coords</span><span class="op">)</span>, adj<span class="op">=</span><span class="fl">1</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/pkg/raster/man/plot.html">plot</a></span><span class="op">(</span><span class="va">world.wintri</span>, col<span class="op">=</span><span class="st">"grey"</span>, add<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">sample_points</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="op">)</span>
+<span class="va">polys</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>wintri<span class="op">=</span><span class="va">buffer300</span><span class="op">$</span><span class="va">wintri</span><span class="op">$</span><span class="va">line</span>, trim.wintri<span class="op">=</span><span class="va">buffer300</span><span class="op">$</span><span class="va">trim.wintri</span><span class="op">$</span><span class="va">line</span><span class="op">)</span>
+<span class="kw">for</span><span class="op">(</span><span class="va">j</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"wintri"</span>, <span class="st">"trim.wintri"</span><span class="op">)</span><span class="op">)</span><span class="op">{</span>
+  <span class="va">el20</span> <span class="op">&lt;-</span> <span class="va">buffer20</span><span class="op">[[</span><span class="va">j</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="st">"line"</span><span class="op">]</span><span class="op">]</span>
+  <span class="va">numOfPoints</span>  <span class="op">&lt;-</span>  <span class="fu">rgeos</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/rgeos/man/misc-gLength.html">gLength</a></span><span class="op">(</span><span class="va">el20</span><span class="op">)</span> <span class="op">/</span> <span class="fl">100</span>
+  <span class="va">sample.pts.100km</span> <span class="op">&lt;-</span> <span class="fu">sp</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/sp/man/spsample.html">spsample</a></span><span class="op">(</span><span class="va">el20</span>, n <span class="op">=</span> <span class="va">numOfPoints</span>, type <span class="op">=</span> <span class="st">"regular"</span><span class="op">)</span>
+  <span class="va">el300</span> <span class="op">&lt;-</span> <span class="va">buffer300</span><span class="op">[[</span><span class="va">j</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="st">"line"</span><span class="op">]</span><span class="op">]</span>
+  <span class="va">numOfPoints</span>  <span class="op">&lt;-</span>  <span class="fu">rgeos</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/rgeos/man/misc-gLength.html">gLength</a></span><span class="op">(</span><span class="va">el300</span><span class="op">)</span> <span class="op">/</span> <span class="fl">100</span>
+  <span class="va">sample.pts.off.100km</span> <span class="op">&lt;-</span> <span class="fu">sp</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/sp/man/spsample.html">spsample</a></span><span class="op">(</span><span class="va">el300</span>, n <span class="op">=</span> <span class="va">numOfPoints</span>, type <span class="op">=</span> <span class="st">"regular"</span><span class="op">)</span>
+  <span class="va">tmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>km100<span class="op">=</span><span class="va">sample.pts.100km</span>, off.km100<span class="op">=</span><span class="va">sample.pts.off.100km</span><span class="op">)</span>
+  <span class="va">sample_points</span><span class="op">[[</span><span class="va">j</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">tmp</span>
+<span class="op">}</span></code></pre></div>
+<p>We will not use the trim line since we don’t want our samples to run into the islands.</p>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/raster/man/plot.html">plot</a></span><span class="op">(</span><span class="va">sample_raster</span><span class="op">$</span><span class="va">raster.wintri</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/pkg/raster/man/plot.html">plot</a></span><span class="op">(</span><span class="va">world.wintri</span>, col<span class="op">=</span><span class="st">"grey"</span>, add<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/pkg/raster/man/plot.html">plot</a></span><span class="op">(</span><span class="va">sample_raster</span><span class="op">$</span><span class="va">raster.wintri</span>, add<span class="op">=</span><span class="cn">TRUE</span>, alpha<span class="op">=</span><span class="fl">0.75</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/pkg/raster/man/plot.html">plot</a></span><span class="op">(</span><span class="va">buffer300</span><span class="op">[[</span><span class="st">"wintri"</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="st">"line"</span><span class="op">]</span><span class="op">]</span>, add<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/pkg/raster/man/plot.html">plot</a></span><span class="op">(</span><span class="va">buffer20</span><span class="op">[[</span><span class="st">"wintri"</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="st">"line"</span><span class="op">]</span><span class="op">]</span>, add<span class="op">=</span><span class="cn">TRUE</span>, col<span class="op">=</span><span class="st">"red"</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/pkg/raster/man/plot.html">plot</a></span><span class="op">(</span><span class="va">sample_points</span><span class="op">[[</span><span class="st">"wintri"</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">km100</span>, add<span class="op">=</span><span class="cn">TRUE</span>, pch<span class="op">=</span><span class="fl">1</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/pkg/raster/man/plot.html">plot</a></span><span class="op">(</span><span class="va">sample_points</span><span class="op">[[</span><span class="st">"wintri"</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">off.km100</span>, add<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<p><img src="data_files/figure-html/unnamed-chunk-18-1.png" width="70%" style="display: block; margin: auto;"></p>
 </div>
 <div id="save-the-objects" class="section level2">
 <h2 class="hasAnchor">
 <a href="#save-the-objects" class="anchor"></a>Save the objects</h2>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">crs_wintri</span> <span class="op">&lt;-</span> <span class="va">crs.wintri</span>
 <span class="fu"><a href="https://rdrr.io/r/base/save.html">save</a></span><span class="op">(</span><span class="va">crs_wintri</span>, file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html">here</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"data/crs_wintri.rda"</span><span class="op">)</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/save.html">save</a></span><span class="op">(</span><span class="va">world</span>, <span class="va">world.wintri</span>, <span class="va">trim.world.wintri</span>, file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html">here</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"data/world.rda"</span><span class="op">)</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/save.html">save</a></span><span class="op">(</span><span class="va">buffer300</span>, <span class="va">buffer20</span>, file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html">here</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"data/buffers.rda"</span><span class="op">)</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/save.html">save</a></span><span class="op">(</span><span class="va">sample_points</span>, file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html">here</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"data/sample_points.rda"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+</div>
 </div>
   </div>
 
