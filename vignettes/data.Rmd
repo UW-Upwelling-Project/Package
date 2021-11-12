@@ -11,9 +11,10 @@ vignette: >
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(eval = FALSE)
+knitr::opts_chunk$set(out.width = "70%", fig.align = "center")
 ```
 
-This example shows how the data in the package were created and saved.
+This example shows how the data in the package were created and saved. The details for how to do these calculations is in the articles in the [basics](https://ocean-satellite-tools.github.io/basics/) package in my ocean satellite tools org.
 
 Specify where to save the downloaded data. Data from a `rerddap::griddap()` call can be verbose, so you'll probably want a folder for it.
 ```{r create_dir}
@@ -69,6 +70,7 @@ world <- rgeos::gUnaryUnion(world)
 world.wintri <- sp::spTransform(world, crs.wintri)
 ```
 
+# This part goes through and only saves big polygons to get rid of little islands
 ```{r}
 p <- lapply(world.wintri@polygons , slot , "Polygons")
 big <- log(unlist(lapply(p[[1]], function(x) methods::slot(x, "area")))) > 14
@@ -80,7 +82,9 @@ slot(trim.world.wintri, "polygons") <- lapply(methods::slot(trim.world.wintri, "
    "comment<-", NULL)
 ```
 
-```{r}
+Here is a plot where the smaller polygons (grey) have been trimmed.
+```{r eval=TRUE, message=FALSE}
+library(imageryML)
 require(raster)
 plot(world.wintri, col="grey")
 plot(trim.world.wintri, col="green", add=TRUE)
@@ -89,13 +93,14 @@ plot(trim.world.wintri, col="green", add=TRUE)
 ## 300 km offshore line
 
 Note, the units for `world.wintri` were set to km. It is important that this code is run on 
-a polygon in a meter as opposed to longlat projection.
+a polygon in a meter projection as opposed to a long-lat projection.
+
+The first polygon in the `world` object is the North-South American polygon. I am only going to use that one here.
 ```{r}
 buffer300 <- list()
 polys <- list(wintri=world.wintri, trim.wintri=trim.world.wintri)
 for(j in 1:length(polys)){
-  p <- polys[[j]]
-world.poly <- world.wintri
+world.poly <- polys[[j]]
 buff1 <- rgeos::gBuffer(world.poly, width = 300, byid = TRUE)
 # erase the inner world polygon
 e <- raster::erase(buff1, world.poly)
@@ -127,6 +132,11 @@ tmp <- list(line = el, df = df, crs = crs.wintri)
 buffer300[["wintri.smooth"]] <- tmp
 ```
 
+```{r eval=TRUE, fig.cap="*Red line is the 300km offshore line.*"}
+plot(trim.world.wintri, col="grey")
+plot(buffer300[["wintri.smooth"]][["line"]], add = TRUE, col="red")
+```
+
 ## Make 20km coast line
 
 Only Holes function direct adaptation from `spatialEco::remove.holes()`
@@ -155,13 +165,13 @@ only.holes <- function (x)
 }
 ```
 
-Create buffer 280 km around the 300km line. Note because we are doing this around a line, we don't need to erase the inner polygon as we had to do for the 300km line.
+Create buffer 280 km around the 300km line. Note because we are doing this around a line, we don't need to erase the inner polygon as we had to do for the 300km line. Again this is only for the North-South America polygon.
 ```{r}
 buffer20 <- list()
 polys <- list(wintri=buffer300$wintri$line, trim.wintri=buffer300$trim.wintri$line)
 for(j in 1:length(polys)){
-  p <- polys[[j]]
-buff20 <- rgeos::gBuffer(el300, width=280)
+  p <- polys[[j]] # really line not poly
+buff20 <- rgeos::gBuffer(p, width=280)
 # Remove the outer part of the polygons and make into lines.
 e20 <- only.holes(buff20)
 el20 <- methods::as(e20, "SpatialLines")
@@ -176,39 +186,49 @@ buffer20[[names(polys)[j]]] <- tmp
 }
 ```
 
+```{r eval=TRUE, fig.cap="*Red line is the 300km offshore line. Blue line is the 20km offshore line.*"}
+plot(trim.world.wintri, col="grey")
+plot(buffer300[["trim.wintri"]][["line"]], add = TRUE, col="red")
+plot(buffer20[["trim.wintri"]][["line"]], add = TRUE, col="blue")
+```
+
+We can plot the "trim" lines (islands removed) and see that the trim line will run through islands. Depending on the goal, that may or may not be a problem.
+```{r eval=TRUE}
+plot(sample_raster$raster.wintri)
+plot(world.wintri, col="grey", add=TRUE)
+plot(sample_raster$raster.wintri, add=TRUE, alpha=0.75)
+plot(buffer20[["trim.wintri"]][["line"]], add=TRUE, col="red")
+plot(buffer20[["wintri"]][["line"]], add=TRUE, col="blue")
+```
+
 ## Coast sample locations every 100km
 
-```{r}
-numOfPoints  <-  rgeos::gLength(el20) / 100
-sample.pts.100km <- sp::spsample(el20, n = numOfPoints, type = "regular")
-sample.pts.off.100km <- sp::spsample(el300, n = numOfPoints, type = "regular")
-sample_points <- list(km100=sample.pts.100km, off.km100=sample.pts.off.100km)
-```
+Next we want to sample the points every 100km along the coast.
 
 ```{r}
+sample_points <- list()
+polys <- list(wintri=buffer300$wintri$line, trim.wintri=buffer300$trim.wintri$line)
+for(j in c("wintri", "trim.wintri")){
+  el20 <- buffer20[[j]][["line"]]
+  numOfPoints  <-  rgeos::gLength(el20) / 100
+  sample.pts.100km <- sp::spsample(el20, n = numOfPoints, type = "regular")
+  el300 <- buffer300[[j]][["line"]]
+  numOfPoints  <-  rgeos::gLength(el300) / 100
+  sample.pts.off.100km <- sp::spsample(el300, n = numOfPoints, type = "regular")
+  tmp <- list(km100=sample.pts.100km, off.km100=sample.pts.off.100km)
+  sample_points[[j]] <- tmp
+}
+```
+
+We will not use the trim line since we don't want our samples to run into the islands.
+```{r eval=TRUE}
 plot(sample_raster$raster.wintri)
-plot(el300, add=TRUE)
-plot(el20, add=TRUE, col="red")
-plot(sample.pts.100km, add=TRUE, pch=1)
-plot(sample.pts.off.100km, add=TRUE)
-text(sample.pts.100km@coords[,1], sample.pts.100km@coords[,2], 1:nrow(sample.pts.100km@coords), adj=-1)
-text(sample.pts.off.100km@coords[,1], sample.pts.off.100km@coords[,2], 1:nrow(sample.pts.off.100km@coords), adj=1)
-```
-
-
-```{r eval=FALSE}
-plot(e300)
-bb <- raster::drawExtent()
-```
-
-```{r eval=FALSE}
-plot(raster::crop(el300, bb))
-plot(el20, add=TRUE, col="red")
-plot(sample.pts.100km, add=TRUE, pch=1)
-plot(sample.pts.off.100km, add=TRUE)
-text(sample.pts.100km@coords[,1], sample.pts.100km@coords[,2], 1:nrow(sample.pts.100km@coords), adj=-1)
-text(sample.pts.off.100km@coords[,1], sample.pts.off.100km@coords[,2], 1:nrow(sample.pts.off.100km@coords), adj=1)
 plot(world.wintri, col="grey", add=TRUE)
+plot(sample_raster$raster.wintri, add=TRUE, alpha=0.75)
+plot(buffer300[["wintri"]][["line"]], add=TRUE)
+plot(buffer20[["wintri"]][["line"]], add=TRUE, col="red")
+plot(sample_points[["wintri"]]$km100, add=TRUE, pch=1)
+plot(sample_points[["wintri"]]$off.km100, add=TRUE)
 ```
 
 ## Save the objects

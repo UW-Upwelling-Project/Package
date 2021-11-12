@@ -99,7 +99,7 @@ x <- df_processed %>% dplyr::filter(date == custom_date)
 r <- x %>% dplyr::select(lon, lat, sst) %>% raster::rasterFromXYZ(crs="+proj=longlat")
 
 # Re-project the SST raster into Winkel Tripel projection (which is what 300km line is in)
-wintri.crs <- raster::crs(sample_points$km100, asText = TRUE)
+wintri.crs <- raster::crs(sample_points[["wintri"]]$km100, asText = TRUE)
 r.wintri <- raster::projectRaster(r, crs = wintri.crs, over = TRUE)
 
 # Crop down the 300km line

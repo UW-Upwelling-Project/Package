@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">imageryML</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.4</span>
       </span>
     </div>
 
@@ -54,13 +54,16 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
+      <a href="../articles/data.html">Smooth Coastline Data</a>
+    </li>
+    <li>
       <a href="../articles/auto3.html">Auto Upwelling Detection 3</a>
     </li>
     <li>
       <a href="../articles/auto3-example.html">Auto Upwelling 3 1980-2020</a>
     </li>
     <li>
-      <a href="../articles/data.html">Smooth Coastline Data</a>
+      <a href="../articles/upwelling_zones.html">Upwelling Zones</a>
     </li>
   </ul>
 </li>
@@ -85,13 +88,13 @@
 
       
 
-      </header><script src="auto3-example_files/header-attrs-2.10/header-attrs.js"></script><div class="row">
+      </header><script src="auto3-example_files/header-attrs-2.11/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Auto Upwelling 3 1980-2020</h1>
                         <h4 class="author">Eli Holmes</h4>
             
-            <h4 class="date">2021-09-01</h4>
+            <h4 class="date">2021-11-11</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/UW-Upwelling-Project/imageryML/blob/master/vignettes/auto3-example.Rmd"><code>vignettes/auto3-example.Rmd</code></a></small>
       <div class="hidden name"><code>auto3-example.Rmd</code></div>
@@ -145,9 +148,9 @@
     <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">zlev</span><span class="op">)</span> <span class="op">%&gt;%</span>
     <span class="co"># Convert into date</span>
     <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>
-      time <span class="op">=</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="http://lubridate.tidyverse.org/reference/ymd_hms.html">ymd_hms</a></span><span class="op">(</span><span class="va">time</span><span class="op">)</span>,
+      time <span class="op">=</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/ymd_hms.html">ymd_hms</a></span><span class="op">(</span><span class="va">time</span><span class="op">)</span>,
       <span class="co"># Extract out day so I can just filter for first day in each month</span>
-      day <span class="op">=</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="http://lubridate.tidyverse.org/reference/day.html">day</a></span><span class="op">(</span><span class="va">time</span><span class="op">)</span>
+      day <span class="op">=</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/day.html">day</a></span><span class="op">(</span><span class="va">time</span><span class="op">)</span>
     <span class="op">)</span> <span class="op">%&gt;%</span>
     <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">day</span><span class="op">)</span> <span class="op">%&gt;%</span>
     <span class="co"># Set column names</span>
@@ -180,7 +183,7 @@
 <span class="va">r</span> <span class="op">&lt;-</span> <span class="va">x</span> <span class="op">%&gt;%</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">lon</span>, <span class="va">lat</span>, <span class="va">sst</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">raster</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/raster/man/rasterFromXYZ.html">rasterFromXYZ</a></span><span class="op">(</span>crs<span class="op">=</span><span class="st">"+proj=longlat"</span><span class="op">)</span>
 
 <span class="co"># Re-project the SST raster into Winkel Tripel projection (which is what 300km line is in)</span>
-<span class="va">wintri.crs</span> <span class="op">&lt;-</span> <span class="fu">raster</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/raster/man/projection.html">crs</a></span><span class="op">(</span><span class="va">sample_points</span><span class="op">$</span><span class="va">km100</span>, asText <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="va">wintri.crs</span> <span class="op">&lt;-</span> <span class="fu">raster</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/raster/man/projection.html">crs</a></span><span class="op">(</span><span class="va">sample_points</span><span class="op">[[</span><span class="st">"wintri"</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">km100</span>, asText <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 <span class="va">r.wintri</span> <span class="op">&lt;-</span> <span class="fu">raster</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/raster/man/projectRaster.html">projectRaster</a></span><span class="op">(</span><span class="va">r</span>, crs <span class="op">=</span> <span class="va">wintri.crs</span>, over <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 
 <span class="co"># Crop down the 300km line</span>
@@ -220,9 +223,9 @@
 <p>For making plots, it will be helpful to have the lat-lon values for the coast points.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># 1. make the x and y into spatial points. need to use the wintri projection</span>
-<span class="va">tmp</span> <span class="op">&lt;-</span> <span class="fu">sp</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/sp/man/SpatialPoints.html">SpatialPoints</a></span><span class="op">(</span><span class="va">final_df</span> <span class="op">%&gt;%</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span>, proj4string <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/raster/man/projection.html">crs</a></span><span class="op">(</span><span class="va">wintri.crs</span><span class="op">)</span><span class="op">)</span>
+<span class="va">tmp</span> <span class="op">&lt;-</span> <span class="fu">sp</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/sp/man/SpatialPoints.html">SpatialPoints</a></span><span class="op">(</span><span class="va">final_df</span> <span class="op">%&gt;%</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span>, proj4string <span class="op">=</span> <span class="fu">raster</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/raster/man/projection.html">crs</a></span><span class="op">(</span><span class="va">wintri.crs</span><span class="op">)</span><span class="op">)</span>
 <span class="co"># 2. transform into the +proj=longlat; I am using crs(r) just to make sure I use the same crs as the original raster (which should be "+proj=longlat")</span>
-<span class="va">tmp</span> <span class="op">&lt;-</span> <span class="fu">sp</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/sp/man/spTransform.html">spTransform</a></span><span class="op">(</span><span class="va">tmp</span>, <span class="fu"><a href="https://rdrr.io/pkg/raster/man/projection.html">crs</a></span><span class="op">(</span><span class="va">r</span><span class="op">)</span><span class="op">)</span>
+<span class="va">tmp</span> <span class="op">&lt;-</span> <span class="fu">sp</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/sp/man/spTransform.html">spTransform</a></span><span class="op">(</span><span class="va">tmp</span>, <span class="fu">raster</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/raster/man/projection.html">crs</a></span><span class="op">(</span><span class="va">r</span><span class="op">)</span><span class="op">)</span>
 <span class="co"># 3. Add the lat-lon onto final_df</span>
 <span class="va">final_df_wlatlon</span> <span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">final_df</span>, lon<span class="op">=</span><span class="va">tmp</span><span class="op">@</span><span class="va">coords</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span>, lat<span class="op">=</span><span class="va">tmp</span><span class="op">@</span><span class="va">coords</span><span class="op">[</span>,<span class="fl">2</span><span class="op">]</span><span class="op">)</span>
 <span class="va">final_df_wlatlon</span> <span class="op">&lt;-</span> <span class="va">final_df_wlatlon</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"date"</span>, <span class="st">"x"</span>, <span class="st">"y"</span>, <span class="st">"lon"</span>, <span class="st">"lat"</span>, 

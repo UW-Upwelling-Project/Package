@@ -1,5 +1,9 @@
 # imageryML
 
+# Version 1.0.4
+
+Bug in the trim world data. It was the same as the non-trim buffers.
+
 # Version 1.0.3
 
 Added functions for auto-detection of upwelling using the SST offshore-nearshore difference. Also added vignettes which meant adding a bunch of packages to Suggests.

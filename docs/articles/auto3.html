@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">imageryML</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.4</span>
       </span>
     </div>
 
@@ -54,13 +54,16 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
+      <a href="../articles/data.html">Smooth Coastline Data</a>
+    </li>
+    <li>
       <a href="../articles/auto3.html">Auto Upwelling Detection 3</a>
     </li>
     <li>
       <a href="../articles/auto3-example.html">Auto Upwelling 3 1980-2020</a>
     </li>
     <li>
-      <a href="../articles/data.html">Smooth Coastline Data</a>
+      <a href="../articles/upwelling_zones.html">Upwelling Zones</a>
     </li>
   </ul>
 </li>
@@ -85,13 +88,13 @@
 
       
 
-      </header><script src="auto3_files/header-attrs-2.10/header-attrs.js"></script><div class="row">
+      </header><script src="auto3_files/header-attrs-2.11/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Auto Upwelling Detection 3</h1>
                         <h4 class="author">Eli Holmes</h4>
             
-            <h4 class="date">2021-09-01</h4>
+            <h4 class="date">2021-11-11</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/UW-Upwelling-Project/imageryML/blob/master/vignettes/auto3.Rmd"><code>vignettes/auto3.Rmd</code></a></small>
       <div class="hidden name"><code>auto3.Rmd</code></div>
@@ -101,9 +104,11 @@
     
     
 <p>This example shows how work through the points along the 20km coastline and return the stats for each point.</p>
-<p>The <strong>imageryML</strong> package our coastline, coastal sample points and the offshore 300km line. <code>smoothCoastData</code></p>
-<p>Load the needed packages for plotting and data.</p>
+<p>The <strong>imageryML</strong> package comes with some pre-computed spatial data sets: world coastline, coastal sample points 20km off-shore and the offshore 300km line. See <code><a href="../articles/data.html">vignette("data")</a></code> for plots of these objects and how they were created.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span>package<span class="op">=</span><span class="st">"imageryML"</span><span class="op">)</span></code></pre></div>
+<p>Load the needed packages for plotting and data.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/raster">raster</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span><span class="op">(</span><span class="va"><a href="https://github.com/UW-Upwelling-Project/imageryML">imageryML</a></span><span class="op">)</span> <span class="co"># the data</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span><span class="op">(</span><span class="va"><a href="https://magrittr.tidyverse.org">magrittr</a></span><span class="op">)</span> <span class="co"># for %&gt;%</span></code></pre></div>
@@ -113,13 +118,13 @@
 <div id="download-from-erddap" class="section level2">
 <h2 class="hasAnchor">
 <a href="#download-from-erddap" class="anchor"></a>Download from ERDDAP</h2>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/import_erddap.html">import_erddap</a></span><span class="op">(</span><span class="st">"2010-01-01"</span>, <span class="st">"2010-12-31"</span>, min_lat <span class="op">=</span> <span class="fl">40.625</span>, max_lat <span class="op">=</span> <span class="fl">50.625</span>, min_lon <span class="op">=</span> <span class="fl">229.875</span>, max_lon <span class="op">=</span> <span class="fl">236.625</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="load" class="section level2">
 <h2 class="hasAnchor">
 <a href="#load" class="anchor"></a>Load</h2>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">efil</span> <span class="op">&lt;-</span> <span class="st">"erddap_2010-01-01_2010-12-31_lat_40.625_50.625_lon_229.875_236.625.csv"</span>
 <span class="va">filename</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="va">efil</span>, package <span class="op">=</span> <span class="st">"imageryML"</span><span class="op">)</span>
 <span class="va">df_raw</span> <span class="op">&lt;-</span> <span class="fu">readr</span><span class="fu">::</span><span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html">read_csv</a></span><span class="op">(</span><span class="va">filename</span><span class="op">)</span></code></pre></div>
@@ -127,17 +132,17 @@
 <div id="process-data" class="section level2">
 <h2 class="hasAnchor">
 <a href="#process-data" class="anchor"></a>Process data</h2>
-<p>Notice that I substract 360 off the longitudes. The standard projects have a different location of longitude 0.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<p>Notice that I substract 360 off the longitudes. The standard projections have a different location of longitude 0.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">df_processed</span> <span class="op">&lt;-</span> <span class="va">df_raw</span> <span class="op">%&gt;%</span> 
   <span class="co"># Get rid of miscellaneous zlev in first row</span>
   <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html">slice</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="co"># zlev is a column of zeroes, so get rid of that</span>
   <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">zlev</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="co"># Convert into date</span>
-  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>time <span class="op">=</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="http://lubridate.tidyverse.org/reference/ymd_hms.html">ymd_hms</a></span><span class="op">(</span><span class="va">time</span><span class="op">)</span>,
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>time <span class="op">=</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/ymd_hms.html">ymd_hms</a></span><span class="op">(</span><span class="va">time</span><span class="op">)</span>,
          <span class="co"># Extract out day so I can just filter for first day in each month</span>
-         day <span class="op">=</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="http://lubridate.tidyverse.org/reference/day.html">day</a></span><span class="op">(</span><span class="va">time</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+         day <span class="op">=</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/day.html">day</a></span><span class="op">(</span><span class="va">time</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">day</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="co"># Set column names</span>
   <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename</a></span><span class="op">(</span>date <span class="op">=</span> <span class="va">time</span>,
@@ -157,13 +162,13 @@
 <h2 class="hasAnchor">
 <a href="#step-1-prepare-raster" class="anchor"></a>Step 1 Prepare raster</h2>
 <p>Now we can apply this to a set of points in our area of interest (WA/OR). Note the raster is on a lat-lon grid. The auto-upwelling code is going to convert that to a meter projection (Winkel Tripel).</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">custom_date</span> <span class="op">&lt;-</span> <span class="st">"2010-08-04"</span>
 <span class="va">x</span> <span class="op">&lt;-</span> <span class="va">df_processed</span> <span class="op">%&gt;%</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">date</span> <span class="op">==</span> <span class="va">custom_date</span><span class="op">)</span>
 <span class="va">r</span> <span class="op">&lt;-</span> <span class="va">x</span> <span class="op">%&gt;%</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">lon</span>, <span class="va">lat</span>, <span class="va">sst</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">raster</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/raster/man/rasterFromXYZ.html">rasterFromXYZ</a></span><span class="op">(</span>crs<span class="op">=</span><span class="st">"+proj=longlat"</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/pkg/raster/man/plot.html">plot</a></span><span class="op">(</span><span class="va">r</span><span class="op">)</span> <span class="co"># needs raster package loaded</span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="auto3_files/figure-html/unnamed-chunk-6-1.png" alt="*Figure. The SST raster shown with longlat projection (lat-lon grid).*" width="70%"><p class="caption">
+<img src="auto3_files/figure-html/unnamed-chunk-7-1.png" alt="*Figure. The SST raster shown with longlat projection (lat-lon grid).*" width="70%"><p class="caption">
 <em>Figure. The SST raster shown with longlat projection (lat-lon grid).</em>
 </p>
 </div>
@@ -173,15 +178,15 @@
 <a href="#step-2-prepare-the-lines-and-points" class="anchor"></a>Step 2 Prepare the lines and points</h2>
 <p>The <strong>imageryML</strong> package includes the 300km lines parallel to the coast, the 20km line parallel to the coast and sample points along that line that are 100km apart. <code><a href="../articles/data.html">vignette("data")</a></code> shows how the lines and points were created.</p>
 <p>The sample points are for the whole world. We need to crop that down to our raster bounding box, but we need the raster in the same projection as the points. It looks a bit wonky, since <code>+lon_0=0</code> (way over in Europe) in <code><a href="https://rdrr.io/pkg/raster/man/projection.html">raster::crs(r.wintri)</a></code>. We could re-project it with <code>+lon_0=-12500</code> and it’d look better but that would not preserve the distances in the saved 300km and 20km lines.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">r.wintri</span> <span class="op">&lt;-</span> <span class="fu">raster</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/raster/man/projectRaster.html">projectRaster</a></span><span class="op">(</span><span class="va">r</span>, crs<span class="op">=</span><span class="fu">raster</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/raster/man/projection.html">crs</a></span><span class="op">(</span><span class="va">sample_points</span><span class="op">$</span><span class="va">km100</span>, asText<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>, over<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>
-<span class="va">coast.pts</span> <span class="op">&lt;-</span> <span class="fu">raster</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/raster/man/crop.html">crop</a></span><span class="op">(</span><span class="va">sample_points</span><span class="op">$</span><span class="va">km100</span>, 
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">r.wintri</span> <span class="op">&lt;-</span> <span class="fu">raster</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/raster/man/projectRaster.html">projectRaster</a></span><span class="op">(</span><span class="va">r</span>, crs<span class="op">=</span><span class="fu">raster</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/raster/man/projection.html">crs</a></span><span class="op">(</span><span class="va">sample_points</span><span class="op">[[</span><span class="st">"wintri"</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">km100</span>, asText<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>, over<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>
+<span class="va">coast.pts</span> <span class="op">&lt;-</span> <span class="fu">raster</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/raster/man/crop.html">crop</a></span><span class="op">(</span><span class="va">sample_points</span><span class="op">[[</span><span class="st">"wintri"</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">km100</span>, 
                        <span class="fu">raster</span><span class="fu">::</span><span class="fu">bbox</span><span class="op">(</span><span class="fu">raster</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/raster/man/trim.html">trim</a></span><span class="op">(</span><span class="va">r.wintri</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/pkg/raster/man/plot.html">plot</a></span><span class="op">(</span><span class="va">r.wintri</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/pkg/raster/man/plot.html">plot</a></span><span class="op">(</span><span class="va">coast.pts</span>, add<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/pkg/raster/man/plot.html">plot</a></span><span class="op">(</span><span class="va">buffer300</span><span class="op">$</span><span class="va">wintri</span><span class="op">$</span><span class="va">line</span>, col<span class="op">=</span><span class="st">"blue"</span>, add<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="auto3_files/figure-html/unnamed-chunk-8-1.png" alt="*Figure. The SST raster projected into the Winkel Tripel projection which is in meters, not lat-lon degrees. The coast sample points separated by 100km along the coast are shown.*" width="70%"><p class="caption">
+<img src="auto3_files/figure-html/unnamed-chunk-9-1.png" alt="*Figure. The SST raster projected into the Winkel Tripel projection which is in meters, not lat-lon degrees. The coast sample points separated by 100km along the coast are shown.*" width="70%"><p class="caption">
 <em>Figure. The SST raster projected into the Winkel Tripel projection which is in meters, not lat-lon degrees. The coast sample points separated by 100km along the coast are shown.</em>
 </p>
 </div>
@@ -189,14 +194,14 @@
 <div id="step-3-auto-detection" class="section level2">
 <h2 class="hasAnchor">
 <a href="#step-3-auto-detection" class="anchor"></a>Step 3 Auto-detection</h2>
-<p>Now apply the auto detection.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<p>Now apply the auto detection. Read <a href="https://ocean-satellite-tools.github.io/basics/articles/6_offshore_points.html">here</a> and <a href="https://ocean-satellite-tools.github.io/basics/articles/7_compute_stats_along_coast.html">here</a> about how one can compute the statistics at each point along a line. Type <code><a href="../reference/autoDetect3.html">?autoDetect3</a></code> to read about the upwelling function. Here I am using the default 300km and 20km offshore line which goes around (not through) islands.</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">eval.time</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span><span class="op">(</span>
   <span class="va">out</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/autoDetect3.html">autoDetect3</a></span><span class="op">(</span><span class="va">x</span>, threshold <span class="op">=</span> <span class="fl">2</span>, val<span class="op">=</span><span class="st">"sst"</span>, na.rm<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span>
   <span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span></code></pre></div>
 <pre><code>## Warning in sp::proj4string(x): CRS object has comment, which is lost in output</code></pre>
 <pre><code>## Warning in proj4string(obj): CRS object has comment, which is lost in output</code></pre>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/raster/man/plot.html">plot</a></span><span class="op">(</span><span class="va">r.wintri</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/pkg/raster/man/plot.html">plot</a></span><span class="op">(</span><span class="va">buffer300</span><span class="op">$</span><span class="va">wintri</span><span class="op">$</span><span class="va">line</span>, add<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/pkg/raster/man/plot.html">plot</a></span><span class="op">(</span><span class="va">buffer20</span><span class="op">$</span><span class="va">wintri</span><span class="op">$</span><span class="va">line</span>, add<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>
@@ -206,37 +211,37 @@
 <span class="fu"><a href="https://rdrr.io/pkg/raster/man/plot.html">plot</a></span><span class="op">(</span><span class="va">out</span><span class="op">$</span><span class="va">offshore.pts</span>, add<span class="op">=</span><span class="cn">TRUE</span>, pch<span class="op">=</span><span class="fl">1</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/graphics/title.html">title</a></span><span class="op">(</span><span class="st">"coast points and corresponding offshore points"</span><span class="op">)</span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="auto3_files/figure-html/unnamed-chunk-11-1.png" alt="*Figure. Coast points and corresponding offshore points. Offshore line is smoothed so points won't fall on line. The average SST in a circle of radius 50 was used. The grey points are cases where there is not upwelling estimate since the offshore point includes NAs. The red points are upwelling and black points are no upwelling.*" width="70%"><p class="caption">
+<img src="auto3_files/figure-html/unnamed-chunk-12-1.png" alt="*Figure. Coast points and corresponding offshore points. Offshore line is smoothed so points won't fall on line. The average SST in a circle of radius 50 was used. The grey points are cases where there is not upwelling estimate since the offshore point includes NAs. The red points are upwelling and black points are no upwelling.*" width="70%"><p class="caption">
 <em>Figure. Coast points and corresponding offshore points. Offshore line is smoothed so points won’t fall on line. The average SST in a circle of radius 50 was used. The grey points are cases where there is not upwelling estimate since the offshore point includes NAs. The red points are upwelling and black points are no upwelling.</em>
 </p>
 </div>
 <p>It will look bad with the longitude 0 line so far east, but if we reproject then distances will be warped and our 300km line will no longer be 300km from the coast.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">newcrs</span> <span class="op">&lt;-</span> <span class="st">"+proj=wintri +lon_0=-125 +lat_1=0 +x_0=0 +y_0=0 +datum=WGS84 +units=km +no_defs"</span>
 <span class="fu"><a href="https://rdrr.io/pkg/raster/man/plot.html">plot</a></span><span class="op">(</span><span class="fu">raster</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/raster/man/projectRaster.html">projectRaster</a></span><span class="op">(</span><span class="va">r</span>, crs<span class="op">=</span><span class="va">newcrs</span><span class="op">)</span>, asp<span class="op">=</span><span class="fl">1</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/pkg/raster/man/plot.html">plot</a></span><span class="op">(</span><span class="fu">sp</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/sp/man/spTransform.html">spTransform</a></span><span class="op">(</span><span class="va">buffer300</span><span class="op">$</span><span class="va">wintri</span><span class="op">$</span><span class="va">line</span>, <span class="va">newcrs</span><span class="op">)</span>, add<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/pkg/raster/man/plot.html">plot</a></span><span class="op">(</span><span class="fu">sp</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/sp/man/spTransform.html">spTransform</a></span><span class="op">(</span><span class="va">buffer20</span><span class="op">$</span><span class="va">wintri</span><span class="op">$</span><span class="va">line</span>, <span class="va">newcrs</span><span class="op">)</span>, add<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/graphics/title.html">title</a></span><span class="op">(</span><span class="st">"reprojecting will change distances"</span><span class="op">)</span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="auto3_files/figure-html/unnamed-chunk-12-1.png" alt="*Figure. Coast points and corresponding offshore points. Offshore line is smoothed so points won't fall on line. The average SST in a circle of radius 50 was used. The grey points are cases where there is not upwelling estimate since the offshore point includes NAs. The red points are upwelling and black points are no upwelling.*" width="70%"><p class="caption">
+<img src="auto3_files/figure-html/unnamed-chunk-13-1.png" alt="*Figure. Coast points and corresponding offshore points. Offshore line is smoothed so points won't fall on line. The average SST in a circle of radius 50 was used. The grey points are cases where there is not upwelling estimate since the offshore point includes NAs. The red points are upwelling and black points are no upwelling.*" width="70%"><p class="caption">
 <em>Figure. Coast points and corresponding offshore points. Offshore line is smoothed so points won’t fall on line. The average SST in a circle of radius 50 was used. The grey points are cases where there is not upwelling estimate since the offshore point includes NAs. The red points are upwelling and black points are no upwelling.</em>
 </p>
 </div>
-<p>One problem is that the <code><a href="../reference/getNearestPointOnLine.html">getNearestPointOnLine()</a></code> function is running the smoothing operation on the 300km line and the <strong>maptools</strong> nearest point on segment function has to work on the whole world 300km line. That step is slow (time = 4.117 seconds). We can speed things up by using a pre-smoothed line and cropping our 300km line to the extent of our raster.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<p>One problem is that the <code><a href="../reference/getNearestPointOnLine.html">getNearestPointOnLine()</a></code> function is running the smoothing operation on the 300km line and the <strong>maptools</strong> nearest point on segment function has to work on the whole world 300km line. That step is slow (time = 3.785 seconds). We can speed things up by using a pre-smoothed line and cropping our 300km line to the extent of our raster.</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># smooth. Need to do this on the whole world</span>
 <span class="va">l.offshore</span> <span class="op">&lt;-</span> <span class="fu">smoothr</span><span class="fu">::</span><span class="fu"><a href="https://strimas.com/smoothr/reference/smooth.html">smooth</a></span><span class="op">(</span><span class="va">buffer300</span><span class="op">$</span><span class="va">wintri</span><span class="op">$</span><span class="va">line</span>, method<span class="op">=</span><span class="st">"ksmooth"</span>, smoothness<span class="op">=</span><span class="fl">5</span><span class="op">)</span></code></pre></div>
 <pre><code>## Warning in sp::proj4string(x): CRS object has comment, which is lost in output</code></pre>
 <pre><code>## Warning in proj4string(obj): CRS object has comment, which is lost in output</code></pre>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># crop smooth line to our raster. need to project raster to the same projection</span>
 <span class="co"># as the 300km line</span>
 <span class="va">l.offshore</span> <span class="op">&lt;-</span> <span class="fu">raster</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/raster/man/crop.html">crop</a></span><span class="op">(</span><span class="va">l.offshore</span>, <span class="fu">raster</span><span class="fu">::</span><span class="fu">bbox</span><span class="op">(</span><span class="va">r.wintri</span><span class="op">)</span><span class="op">)</span>
 <span class="va">eval.time</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span><span class="op">(</span>
   <span class="va">out</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/autoDetect3.html">autoDetect3</a></span><span class="op">(</span><span class="va">x</span>, l.offshore <span class="op">=</span> <span class="va">l.offshore</span>, threshold <span class="op">=</span> <span class="fl">2</span>, val<span class="op">=</span><span class="st">"sst"</span>, smooth.method<span class="op">=</span><span class="st">"none"</span><span class="op">)</span>
   <span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span></code></pre></div>
-<p>Now this is much faster. Time = 0.283 in seconds.</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<p>Now this is much faster. Time = 0.253 in seconds.</p>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/raster/man/plot.html">plot</a></span><span class="op">(</span><span class="va">r.wintri</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/pkg/raster/man/plot.html">plot</a></span><span class="op">(</span><span class="va">buffer300</span><span class="op">$</span><span class="va">wintri</span><span class="op">$</span><span class="va">line</span>, add<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/pkg/raster/man/plot.html">plot</a></span><span class="op">(</span><span class="va">buffer20</span><span class="op">$</span><span class="va">wintri</span><span class="op">$</span><span class="va">line</span>, add<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>
@@ -246,7 +251,7 @@
 <span class="fu"><a href="https://rdrr.io/pkg/raster/man/plot.html">plot</a></span><span class="op">(</span><span class="va">out</span><span class="op">$</span><span class="va">offshore.pts</span>, add<span class="op">=</span><span class="cn">TRUE</span>, pch<span class="op">=</span><span class="fl">1</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/graphics/title.html">title</a></span><span class="op">(</span><span class="st">"coast points and corresponding offshore points"</span><span class="op">)</span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="auto3_files/figure-html/unnamed-chunk-15-1.png" alt="*Figure. Coast points and corresponding offshore points, using cropped 300km line which speeds up the calculations. Offshore line is not smoothed. The average SST in a circle of radius 50 was used. The grey points are cases where there is not upwelling estimate since the offshore point includes NAs. The red points are upwelling and black points are no upwelling.*" width="70%"><p class="caption">
+<img src="auto3_files/figure-html/unnamed-chunk-16-1.png" alt="*Figure. Coast points and corresponding offshore points, using cropped 300km line which speeds up the calculations. Offshore line is not smoothed. The average SST in a circle of radius 50 was used. The grey points are cases where there is not upwelling estimate since the offshore point includes NAs. The red points are upwelling and black points are no upwelling.*" width="70%"><p class="caption">
 <em>Figure. Coast points and corresponding offshore points, using cropped 300km line which speeds up the calculations. Offshore line is not smoothed. The average SST in a circle of radius 50 was used. The grey points are cases where there is not upwelling estimate since the offshore point includes NAs. The red points are upwelling and black points are no upwelling.</em>
 </p>
 </div>

@@ -1,7 +1,7 @@
 #' Process Optimal Interpolation data
 #' 
 #' @description
-#' Process a download from CoastWatch ERDDAP OI SST data. Mask out the Puget Sound
+#' Process a download from CoastWatch ERDDAP OI SST data. Mask out the Puget Sound. Columns are lat, lon, sst.
 #' 
 #' @details
 #' 

@@ -15,7 +15,10 @@ knitr::opts_chunk$set(out.width = "70%", fig.align = "center")
 
 This example shows how work through the points along the 20km coastline and return the stats for each point.
 
-The **imageryML** package our coastline, coastal sample points and the offshore 300km line. `smoothCoastData`
+The **imageryML** package comes with some pre-computed spatial data sets: world coastline, coastal sample points 20km off-shore and the offshore 300km line. See `vignette("data")` for plots of these objects and how they were created.
+```{r}
+data(package="imageryML")
+```
 
 
 Load the needed packages for plotting and data.
@@ -43,7 +46,7 @@ df_raw <- readr::read_csv(filename)
 
 ## Process data
 
-Notice that I substract 360 off the longitudes. The standard projects have a different location of longitude 0.
+Notice that I substract 360 off the longitudes. The standard projections have a different location of longitude 0.
 
 ```{r}
 df_processed <- df_raw %>% 
@@ -94,8 +97,8 @@ The sample points are for the whole world. We need to crop that down to our rast
 figcap <- paste("*Figure. The SST raster projected into the Winkel Tripel projection which is in meters, not lat-lon degrees. The coast sample points separated by 100km along the coast are shown.*")
 ```
 ```{r fig.cap=figcap}
-r.wintri <- raster::projectRaster(r, crs=raster::crs(sample_points$km100, asText=TRUE), over=TRUE)
-coast.pts <- raster::crop(sample_points$km100, 
+r.wintri <- raster::projectRaster(r, crs=raster::crs(sample_points[["wintri"]]$km100, asText=TRUE), over=TRUE)
+coast.pts <- raster::crop(sample_points[["wintri"]]$km100, 
                        raster::bbox(raster::trim(r.wintri)))
 plot(r.wintri)
 plot(coast.pts, add=TRUE)
@@ -104,7 +107,7 @@ plot(buffer300$wintri$line, col="blue", add=TRUE)
 
 ## Step 3 Auto-detection
 
-Now apply the auto detection.
+Now apply the auto detection. Read [here](https://ocean-satellite-tools.github.io/basics/articles/6_offshore_points.html) and [here](https://ocean-satellite-tools.github.io/basics/articles/7_compute_stats_along_coast.html) about how one can compute the statistics at each point along a line. Type `?autoDetect3` to read about the upwelling function. Here I am using the default 300km and 20km offshore line which goes around (not through) islands.
 ```{r}
 eval.time <- system.time(
   out <- autoDetect3(x, threshold = 2, val="sst", na.rm=FALSE)

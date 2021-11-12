@@ -1,0 +1,165 @@
+---
+title: "Upwelling Zones"
+author: "Eli Holmes"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Upwelling Zones}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(out.width = "70%", fig.align = "center")
+```
+
+This creates the map of the worlds upwelling zones.
+
+
+
+Load the needed packages for plotting and data.
+```{r message=FALSE, warning=FALSE}
+library(sf)
+library(spData)
+```
+
+# Load the data and process
+
+```{r}
+world_proj = st_transform(world, "+proj=eck4")
+par(mar = c(0, 0, 0, 0))
+plot(world_proj["continent"], reset = FALSE, main = "", key.pos = NULL)
+g = st_graticule()
+g = st_transform(g, crs = "+proj=eck4")
+plot(g$geometry, add = TRUE, col = "lightgrey")
+```
+
+```{r eval=FALSE}
+# I clicked along the map to locate the points
+# forgot one so had to add that (xx)
+par(mar = c(0, 0, 0, 0))
+plot(st_geometry(world_proj), graticule = TRUE, reset = FALSE)
+x <- locator()
+x$x <- c(x$x, xx$x)
+x$y <- c(x$y, xx$y)
+```
+```{r eval=FALSE}
+# This added on the names
+upzones <- data.frame(x=x$x, y=x$y)
+upzones$name <- c("Bering Sea", "California",
+                  "California", "Peru", "Chile",
+                  "Chile", "Maldivas Current",
+                  "Cabo Frio", "Cabo de Santa Marta",
+                  "S Carribean", "Gulf of Mexico",
+                  "Grand Banks", "Portugal",
+                  "Canary", "Canary",
+                  "Gulf of Guinea", "Benguela", "Agulhas Bank",
+                  "Madagascar", "Somalia",
+                  "Oman", "SE India",
+                  "Java", "Australia",
+                  "New Zealand", "Arafura Sea",
+                  "S China Sea", "E China Sea",
+                  "NE China Sea", "Yellow Sea",
+                  "Australia")
+upzones$type <- c("other", "seasonal",
+                  "continuous", "continuous", "continuous",
+                  "seasonal", "other",
+                  "seasonal", "seasonal",
+                  "seasonal", "seasonal",
+                  "other", "continuous",
+                  "continuous", "seasonal",
+                  "other", "continuous", 
+                  "other",
+                  "other", "seasonal",
+                  "seasonal", "seasonal",
+                  "seasonal", "seasonal",
+                  "seasonal", "seasonal",
+                  "seasonal", "seasonal",
+                  "seasonal", "other",
+                  "continuous")
+```
+
+Read in the upwelling zones locations.
+```{r}
+a= "x,y,name,type
+-11689243.2952006,7292027.26158936,Bering Sea,other
+-10619639.3839124,4847218.32150208,California,seasonal
+-10390438.5457792,3472013.29270299,California,continuous
+-7640028.48818101,-806402.35244974,Peru,continuous
+-6417624.01813737,-3786013.2481811,Chile,continuous
+-6112022.90062646,-5925221.07075747,Chile,seasonal
+-5348020.10684919,-6307222.46764611,Maldivas Current,other
+-4431216.75431646,-3938813.80693656,Cabo Frio,seasonal
+-3743614.23991691,-3174811.01315929,Cabo de Santa Marta,seasonal
+-6417624.01813737,1562006.30825981,S Carribean,seasonal
+-8709632.39946919,2555209.94017026,Gulf of Mexico,seasonal
+-4278416.195561,5764021.67403481,Grand Banks,other
+-840403.623563274,4770818.04212435,Portugal,continuous
+-1069604.46169646,3624813.85145844,Canary,continuous
+-1604406.41734054,2173208.54328163,Canary,seasonal
+305600.567102636,568802.676349352,Gulf of Guinea,other
+1222403.91963537,-3404011.85129247,Benguela,continuous
+2444808.389679,-4550016.04195838,Agulhas Bank,other
+4202014.81536673,-3480412.1306702,Madagascar,other
+4813217.05038855,950804.07323799,Somalia,seasonal
+5348019.00603264,2249608.82265935,Oman,seasonal
+7105225.43172037,1332805.47012662,SE India,seasonal
+10772438.8418513,-1417604.58747156,Java,seasonal
+11994843.3118949,-5008417.71822474,Australia,seasonal
+14134051.1344713,-5390419.11511338,New Zealand,seasonal
+12835246.3850499,-959202.911205194,Arafura Sea,seasonal
+10084836.3274517,1332805.47012662,S China Sea,seasonal
+10466837.7243404,2784410.77830345,E China Sea,seasonal
+11001639.6799845,3548413.57208072,NE China Sea,seasonal
+10543238.0037181,4388816.64523572,Yellow Sea,other
+13403382.8799347,-4304872.59810139,Australia,continuous"
+fil <- tempfile(fileext = ".data")
+cat(a, file=fil)
+upzones <- read.csv(fil)
+```
+
+```{r}
+points <- 
+        st_as_sf(upzones, coords = c('x', 'y'), crs = "+proj=eck4", remove=FALSE) 
+```
+
+```{r}
+library(ggplot2)
+library(ggrepel)
+g <- ggplot() + 
+  geom_sf(data = world_proj) + theme_minimal() + 
+  geom_sf(data = points, aes(color=type), size = 4, shape = 19) + 
+geom_label_repel(data = points, aes(x=x, y=y, label = name), size = 2, min.segment.length=0) +
+  xlab("") + ylab("")
+g
+```
+
+Save the plot
+```{r eval=FALSE}
+# Opening the graphical device
+pdf(file="upwelling_zones.pdf")
+g
+# Closing the graphical device
+dev.off() 
+
+svg(file="upwelling_zones.svg")
+g
+dev.off() 
+
+postscript("upwelling_zones.ps")
+g
+dev.off() 
+
+png("upwelling_zones.png", width = 465*0.5, height = 225*0.5, units='mm', res = 300)
+  g
+dev.off()
+```
+
+```{r}
+knitr::include_graphics(file.path(here::here(), "inst", "images", "upwelling_zones.png"))
+```
+
+
+
+
+

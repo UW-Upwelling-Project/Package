@@ -16,7 +16,7 @@
 #' so there will be more upwelling NAs along the coast.
 #' * `world` A world coastline in `sp::SpatialLines`, format in Winkel Tripel projection. `trim.world.wintri` has the islands removed
 #' * `sample_points` A sample of points from the smooth 20km buffer line where points 
-#' are 100km apart.
+#' are 100km apart. List with points for the buffer lines with and without the islands removed.
 #' 
 #'
 #' @keywords data upwelling

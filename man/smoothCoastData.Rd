@@ -25,7 +25,7 @@ where the islands are removed is also included but this line will go on top of i
 so there will be more upwelling NAs along the coast.
 \item \code{world} A world coastline in \code{sp::SpatialLines}, format in Winkel Tripel projection. \code{trim.world.wintri} has the islands removed
 \item \code{sample_points} A sample of points from the smooth 20km buffer line where points
-are 100km apart.
+are 100km apart. List with points for the buffer lines with and without the islands removed.
 }
 }
 \keyword{data}

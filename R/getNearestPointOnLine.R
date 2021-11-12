@@ -11,7 +11,7 @@
 #'
 #' @param p the points as a `sp::SpatialPoints` object.
 #' @param l the lines as a `sp::SpatialLines` object.
-#' @param smooth.method type of method to use to smooth the offshore line. This is needed to have the offshore points spread regularly along the line and not be affected by divits.
+#' @param smooth.method type of method to use to smooth the offshore line. This is needed to have the offshore points spread regularly along the line and not be affected by divots.
 #' @param ... parameters to specify smoothing. If "gSimplify", `tol=30` is ok. If "ksmooth", `smoothness=5` is ok. 
 #' 
 #' @details If the line is wavey, smoothing can help find points that look more

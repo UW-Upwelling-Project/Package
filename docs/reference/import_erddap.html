@@ -73,7 +73,7 @@ optimal interpolation SST data." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">imageryML</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.4</span>
       </span>
     </div>
 
@@ -96,13 +96,16 @@ optimal interpolation SST data." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/data.html">Smooth Coastline Data</a>
+    </li>
+    <li>
       <a href="../articles/auto3.html">Auto Upwelling Detection 3</a>
     </li>
     <li>
       <a href="../articles/auto3-example.html">Auto Upwelling 3 1980-2020</a>
     </li>
     <li>
-      <a href="../articles/data.html">Smooth Coastline Data</a>
+      <a href="../articles/upwelling_zones.html">Upwelling Zones</a>
     </li>
   </ul>
 </li>
@@ -131,7 +134,7 @@ optimal interpolation SST data." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Download data from an ERDDAP server</h1>
-    <small class="dont-index">Source: <a href='https://github.com/UW-Upwelling-Project/imageryML/blob/master/R/importdata.R'><code>R/importdata.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/UW-Upwelling-Project/imageryML/blob/master/R/import_erddap.R'><code>R/import_erddap.R</code></a></small>
     <div class="hidden name"><code>import_erddap.Rd</code></div>
     </div>
 
@@ -176,6 +179,10 @@ optimal interpolation SST data.</p>
     <tr>
       <th>max_lon</th>
       <td><p>maximum longitude</p></td>
+    </tr>
+    <tr>
+      <th>silent</th>
+      <td><p>no messages to console</p></td>
     </tr>
     </table>
 

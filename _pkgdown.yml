@@ -13,9 +13,10 @@ articles:
 - title: Examples
   navbar: ~
   contents:
+  - data
   - auto3
   - auto3-example
-  - data
+  - upwelling_zones
 
 home:
   links:

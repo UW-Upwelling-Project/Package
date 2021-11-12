@@ -8,7 +8,7 @@ autoDetect3(
   x,
   threshold = 2,
   val = "sst",
-  p = imageryML::sample_points$km100,
+  p = imageryML::sample_points$wintri$km100,
   smooth.method = "ksmooth",
   l.offshore = imageryML::buffer300$wintri$line,
   d.offshore = 50,
@@ -25,7 +25,7 @@ autoDetect3(
 
 \item{val}{what the SST column is called}
 
-\item{p}{the coastal points as a \code{sp::SpatialPoints} object. Default is to use \code{km100} in \verb{data("sample_points)"}}
+\item{p}{the coastal points as a \code{sp::SpatialPoints} object. Default is to use \code{km100} in \verb{data("sample_points)"} for the coastline where the islands are not removed.}
 
 \item{smooth.method}{(optional) the smoothing to apply to the offshore line}
 

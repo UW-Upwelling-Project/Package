@@ -75,7 +75,7 @@ and coastal sample points that are part of the imageML package. See smoothCoastD
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">imageryML</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.4</span>
       </span>
     </div>
 
@@ -98,13 +98,16 @@ and coastal sample points that are part of the imageML package. See smoothCoastD
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/data.html">Smooth Coastline Data</a>
+    </li>
+    <li>
       <a href="../articles/auto3.html">Auto Upwelling Detection 3</a>
     </li>
     <li>
       <a href="../articles/auto3-example.html">Auto Upwelling 3 1980-2020</a>
     </li>
     <li>
-      <a href="../articles/data.html">Smooth Coastline Data</a>
+      <a href="../articles/upwelling_zones.html">Upwelling Zones</a>
     </li>
   </ul>
 </li>
@@ -148,11 +151,11 @@ and coastal sample points that are part of the <strong>imageML</strong> package.
   <span class='va'>x</span>,
   threshold <span class='op'>=</span> <span class='fl'>2</span>,
   val <span class='op'>=</span> <span class='st'>"sst"</span>,
-  p <span class='op'>=</span> <span class='va'>sample_points</span><span class='op'>$</span><span class='va'>km100</span>,
+  p <span class='op'>=</span> <span class='fu'>imageryML</span><span class='fu'>::</span><span class='va'><a href='smoothCoastData.html'>sample_points</a></span><span class='op'>$</span><span class='va'>wintri</span><span class='op'>$</span><span class='va'>km100</span>,
   smooth.method <span class='op'>=</span> <span class='st'>"ksmooth"</span>,
-  l.offshore <span class='op'>=</span> <span class='va'>buffer300</span><span class='op'>$</span><span class='va'>wintri</span><span class='op'>$</span><span class='va'>line</span>,
+  l.offshore <span class='op'>=</span> <span class='fu'>imageryML</span><span class='fu'>::</span><span class='va'><a href='smoothCoastData.html'>buffer300</a></span><span class='op'>$</span><span class='va'>wintri</span><span class='op'>$</span><span class='va'>line</span>,
   d.offshore <span class='op'>=</span> <span class='fl'>50</span>,
-  l.coast <span class='op'>=</span> <span class='va'>buffer20</span><span class='op'>$</span><span class='va'>wintri</span><span class='op'>$</span><span class='va'>line</span>,
+  l.coast <span class='op'>=</span> <span class='fu'>imageryML</span><span class='fu'>::</span><span class='va'><a href='smoothCoastData.html'>buffer20</a></span><span class='op'>$</span><span class='va'>wintri</span><span class='op'>$</span><span class='va'>line</span>,
   d.coast <span class='op'>=</span> <span class='fl'>0</span>,
   na.rm <span class='op'>=</span> <span class='cn'>TRUE</span>,
   <span class='va'>...</span>
@@ -175,7 +178,7 @@ and coastal sample points that are part of the <strong>imageML</strong> package.
     </tr>
     <tr>
       <th>p</th>
-      <td><p>the coastal points as a <code><a href='https://rdrr.io/pkg/sp/man/SpatialPoints.html'>sp::SpatialPoints</a></code> object.</p></td>
+      <td><p>the coastal points as a <code><a href='https://rdrr.io/pkg/sp/man/SpatialPoints.html'>sp::SpatialPoints</a></code> object. Default is to use <code>km100</code> in <code>data("sample_points)"</code> for the coastline where the islands are not removed.</p></td>
     </tr>
     <tr>
       <th>smooth.method</th>

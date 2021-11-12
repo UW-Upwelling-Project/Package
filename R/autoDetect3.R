@@ -2,13 +2,13 @@
 #'
 #' Take a data frame processed from data downloaded from ERDDAP and evaluates
 #' upwelling by comparing the SST at a point along a smoothed coast to the average
-#' SST at a point offshore. This uses a smoothed coastline smoothed offshore line,
+#' SST at a point offshore. This uses a smoothed coastline, smoothed offshore line,
 #' and coastal sample points that are part of the **imageML** package. See \code{\link{smoothCoastData}}.
 #'
-#' @param x cleaned dataframe. See \code{\link{processOIData}()}.
+#' @param x cleaned dataframe of SST values. See \code{\link{processOIData}()}. Note, this function might require that lon_0=0 in the crs.
 #' @param threshold offshore-coast difference for upwelling
 #' @param val what the SST column is called
-#' @param p the coastal points as a `sp::SpatialPoints` object. Default is to use `km100` in `data("sample_points)"`
+#' @param p the coastal points as a `sp::SpatialPoints` object. Default is to use `km100` in `data("sample_points)"` for the coastline where the islands are not removed.
 #' @param l.offshore (optional) the offshore line as a `sp::SpatialLines` object.
 #' @param d.offshore the radius of the circle to average around the offshore points.
 #' @param l.coast (optional) the coast line as a `sp::SpatialLines` object.
@@ -27,7 +27,7 @@
 #' @keywords auto
 #' @export
 autoDetect3 <- function(x, threshold = 2, val = "sst",
-                        p = imageryML::sample_points$km100,
+                        p = imageryML::sample_points$wintri$km100,
                         smooth.method = "ksmooth",
                         l.offshore = imageryML::buffer300$wintri$line,
                         d.offshore = 50,

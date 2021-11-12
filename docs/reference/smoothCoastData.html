@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">imageryML</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.4</span>
       </span>
     </div>
 
@@ -95,13 +95,16 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/data.html">Smooth Coastline Data</a>
+    </li>
+    <li>
       <a href="../articles/auto3.html">Auto Upwelling Detection 3</a>
     </li>
     <li>
       <a href="../articles/auto3-example.html">Auto Upwelling 3 1980-2020</a>
     </li>
     <li>
-      <a href="../articles/data.html">Smooth Coastline Data</a>
+      <a href="../articles/upwelling_zones.html">Upwelling Zones</a>
     </li>
   </ul>
 </li>
@@ -152,9 +155,9 @@ so there will be more upwelling NAs along the coast.</p></li>
 dataframe format in Winkel Tripel projection. A buffer line that is from a coastline
 where the islands are removed is also included but this line will go on top of islands
 so there will be more upwelling NAs along the coast.</p></li>
-<li><p><code>world</code> A world coastline in <code><a href='https://rdrr.io/pkg/sp/man/SpatialLines.html'>sp::SpatialLines</a></code>, format in Winkel Tripel projection.</p></li>
+<li><p><code>world</code> A world coastline in <code><a href='https://rdrr.io/pkg/sp/man/SpatialLines.html'>sp::SpatialLines</a></code>, format in Winkel Tripel projection. <code>trim.world.wintri</code> has the islands removed</p></li>
 <li><p><code>sample_points</code> A sample of points from the smooth 20km buffer line where points
-are 100km apart.</p></li>
+are 100km apart. List with points for the buffer lines with and without the islands removed.</p></li>
 </ul>
 
 
