@@ -94,7 +94,7 @@
       <h1 data-toc-skip>Smooth Coastline Data</h1>
                         <h4 class="author">Eli Holmes</h4>
             
-            <h4 class="date">2021-11-12</h4>
+            <h4 class="date">2021-11-16</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/UW-Upwelling-Project/imageryML/blob/master/vignettes/data.Rmd"><code>vignettes/data.Rmd</code></a></small>
       <div class="hidden name"><code>data.Rmd</code></div>
@@ -301,11 +301,20 @@
 <span class="fu"><a href="https://rdrr.io/pkg/raster/man/plot.html">plot</a></span><span class="op">(</span><span class="va">sample_points</span><span class="op">[[</span><span class="st">"wintri"</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">km100</span>, add<span class="op">=</span><span class="cn">TRUE</span>, pch<span class="op">=</span><span class="fl">1</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/pkg/raster/man/plot.html">plot</a></span><span class="op">(</span><span class="va">sample_points</span><span class="op">[[</span><span class="st">"wintri"</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">off.km100</span>, add<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 <p><img src="data_files/figure-html/unnamed-chunk-18-1.png" width="70%" style="display: block; margin: auto;"></p>
+<p>Create a matching set of off-shore points.</p>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw">for</span><span class="op">(</span><span class="va">j</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"wintri"</span>, <span class="st">"trim.wintri"</span><span class="op">)</span><span class="op">)</span><span class="op">{</span>
+  <span class="va">el20</span> <span class="op">&lt;-</span> <span class="fu">imageryML</span><span class="fu">::</span><span class="va"><a href="../reference/smoothCoastData.html">buffer20</a></span><span class="op">[[</span><span class="va">j</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="st">"line"</span><span class="op">]</span><span class="op">]</span>
+  <span class="va">l.offshore</span> <span class="op">&lt;-</span> <span class="fu">imageryML</span><span class="fu">::</span><span class="va"><a href="../reference/smoothCoastData.html">buffer300</a></span><span class="op">[[</span><span class="va">j</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="st">"line"</span><span class="op">]</span><span class="op">]</span>
+  <span class="va">coast.pts</span> <span class="op">&lt;-</span> <span class="va">sample_points</span><span class="op">[[</span><span class="va">j</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">km100</span>
+  <span class="va">os.pts</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getNearestPointOnLine.html">getNearestPointOnLine</a></span><span class="op">(</span><span class="va">l.offshore</span>, <span class="va">coast.pts</span>, smooth.method <span class="op">=</span> <span class="st">"ksmooth"</span><span class="op">)</span><span class="op">$</span><span class="va">sp</span>
+  <span class="va">sample_points</span><span class="op">[[</span><span class="va">j</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">km100.offshore.pair</span>
+<span class="op">}</span></code></pre></div>
 </div>
 <div id="save-the-objects" class="section level2">
 <h2 class="hasAnchor">
 <a href="#save-the-objects" class="anchor"></a>Save the objects</h2>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">crs_wintri</span> <span class="op">&lt;-</span> <span class="va">crs.wintri</span>
 <span class="fu"><a href="https://rdrr.io/r/base/save.html">save</a></span><span class="op">(</span><span class="va">crs_wintri</span>, file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html">here</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"data/crs_wintri.rda"</span><span class="op">)</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/save.html">save</a></span><span class="op">(</span><span class="va">world</span>, <span class="va">world.wintri</span>, <span class="va">trim.world.wintri</span>, file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html">here</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"data/world.rda"</span><span class="op">)</span><span class="op">)</span>

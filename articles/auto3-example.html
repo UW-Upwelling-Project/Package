@@ -94,7 +94,7 @@
       <h1 data-toc-skip>Auto Upwelling 3 1980-2020</h1>
                         <h4 class="author">Eli Holmes</h4>
             
-            <h4 class="date">2021-11-12</h4>
+            <h4 class="date">2021-11-16</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/UW-Upwelling-Project/imageryML/blob/master/vignettes/auto3-example.Rmd"><code>vignettes/auto3-example.Rmd</code></a></small>
       <div class="hidden name"><code>auto3-example.Rmd</code></div>
@@ -189,8 +189,10 @@
 <span class="co"># Crop down the 300km line</span>
 <span class="va">r.wintri.bbox</span> <span class="op">&lt;-</span> <span class="fu">raster</span><span class="fu">::</span><span class="fu">bbox</span><span class="op">(</span><span class="va">r.wintri</span><span class="op">)</span>
 <span class="va">l.offshore</span> <span class="op">&lt;-</span> <span class="fu">smoothr</span><span class="fu">::</span><span class="fu"><a href="https://strimas.com/smoothr/reference/smooth.html">smooth</a></span><span class="op">(</span><span class="va">buffer300</span><span class="op">$</span><span class="va">wintri</span><span class="op">$</span><span class="va">line</span>, method <span class="op">=</span> <span class="st">"ksmooth"</span>, smoothness <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></code></pre></div>
-<pre><code>## Warning in sp::proj4string(x): CRS object has comment, which is lost in output</code></pre>
-<pre><code>## Warning in proj4string(obj): CRS object has comment, which is lost in output</code></pre>
+<pre><code>## Warning in sp::proj4string(x): CRS object has comment, which is lost in output; in tests, see
+## https://cran.r-project.org/web/packages/sp/vignettes/CRS_warnings.html</code></pre>
+<pre><code>## Warning in proj4string(obj): CRS object has comment, which is lost in output; in tests, see
+## https://cran.r-project.org/web/packages/sp/vignettes/CRS_warnings.html</code></pre>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">l.offshore</span> <span class="op">&lt;-</span> <span class="fu">raster</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/raster/man/crop.html">crop</a></span><span class="op">(</span><span class="va">l.offshore</span>, <span class="va">r.wintri.bbox</span><span class="op">)</span></code></pre></div>
 </div>
