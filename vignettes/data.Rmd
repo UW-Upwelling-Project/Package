@@ -231,6 +231,16 @@ plot(sample_points[["wintri"]]$km100, add=TRUE, pch=1)
 plot(sample_points[["wintri"]]$off.km100, add=TRUE)
 ```
 
+Create a matching set of off-shore points.
+```{r}
+for(j in c("wintri", "trim.wintri")){
+  el20 <- imageryML::buffer20[[j]][["line"]]
+  l.offshore <- imageryML::buffer300[[j]][["line"]]
+  coast.pts <- sample_points[[j]]$km100
+  os.pts <- getNearestPointOnLine(l.offshore, coast.pts, smooth.method = "ksmooth")$sp
+  sample_points[[j]]$km100.offshore.pair
+}
+```
 ## Save the objects
 
 ```{r}
