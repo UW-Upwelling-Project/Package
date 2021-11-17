@@ -238,10 +238,36 @@ for(j in c("wintri", "trim.wintri")){
   l.offshore <- imageryML::buffer300[[j]][["line"]]
   coast.pts <- sample_points[[j]]$km100
   os.pts <- getNearestPointOnLine(l.offshore, coast.pts, smooth.method = "ksmooth")$sp
-  sample_points[[j]]$km100.offshore.pair
+  sample_points[[j]]$km100.offshore.pair <- os.pts
 }
 ```
+
+Create lat-lon versions
+```{r}
 ## Save the objects
+crs.latlon <- sp::CRS("+proj=longlat +datum=WGS84")
+
+j <- "wintri"
+  sample_points[["latlon"]]$km100 <- sp::spTransform(sample_points[[j]]$km100, crs.latlon)
+  sample_points[["latlon"]]$km100.offshore.pair <- sp::spTransform(sample_points[[j]]$km100.offshore.pair, crs.latlon)
+  sample_points[["latlon"]]$off.km100 <- sp::spTransform(sample_points[[j]]$off.km100, crs.latlon)
+j <- "trim.wintri"
+  sample_points[["trim.latlon"]]$km100 <- sp::spTransform(sample_points[[j]]$km100, crs.latlon)
+  sample_points[["trim.latlon"]]$km100.offshore.pair <- sp::spTransform(sample_points[[j]]$km100.offshore.pair, crs.latlon)
+sample_points[["trim.latlon"]]$off.km100 <- sp::spTransform(sample_points[[j]]$off.km100, crs.latlon)
+j <- "wintri"
+  df <- cbind(as.data.frame(sample_points[[j]]$km100), as.data.frame(sample_points[[j]]$km100.offshore.pair))
+  j <- "latlon"
+ df <- cbind(df, as.data.frame(sample_points[[j]]$km100), as.data.frame(sample_points[[j]]$km100.offshore.pair))
+colnames(df) <- c("x.km.ns", "y.km.ns", "x.km.os", "y.km.os", "lon.ns", "lat.ns", "lon.os", "lat.os")
+write.csv(df, row.names=FALSE, file=file.path(here::here(), "inst", "extdata", "sample_point_pairs.csv"))
+j <- "trim.wintri"
+  df <- cbind(as.data.frame(sample_points[[j]]$km100), as.data.frame(sample_points[[j]]$km100.offshore.pair))
+  j <- "trim.latlon"
+ df <- cbind(df, as.data.frame(sample_points[[j]]$km100), as.data.frame(sample_points[[j]]$km100.offshore.pair))
+colnames(df) <- c("x.km.ns", "y.km.ns", "x.km.os", "y.km.os", "lon.ns", "lat.ns", "lon.os", "lat.os")
+write.csv(df, row.names=FALSE, file=file.path(here::here(), "inst", "extdata", "sample_point_pairs_trim.csv"))
+```
 
 ```{r}
 crs_wintri <- crs.wintri
