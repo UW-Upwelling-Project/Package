@@ -42,7 +42,7 @@
 <meta property="og:title" content="Autodetection algorithm 3 — autoDetect3" />
 <meta property="og:description" content="Take a data frame processed from data downloaded from ERDDAP and evaluates
 upwelling by comparing the SST at a point along a smoothed coast to the average
-SST at a point offshore. This uses a smoothed coastline smoothed offshore line,
+SST at a point offshore. This uses a smoothed coastline, smoothed offshore line,
 and coastal sample points that are part of the imageML package. See smoothCoastData." />
 
 
@@ -143,7 +143,7 @@ and coastal sample points that are part of the imageML package. See smoothCoastD
     <div class="ref-description">
     <p>Take a data frame processed from data downloaded from ERDDAP and evaluates
 upwelling by comparing the SST at a point along a smoothed coast to the average
-SST at a point offshore. This uses a smoothed coastline smoothed offshore line,
+SST at a point offshore. This uses a smoothed coastline, smoothed offshore line,
 and coastal sample points that are part of the <strong>imageML</strong> package. See <code><a href='smoothCoastData.html'>smoothCoastData</a></code>.</p>
     </div>
 
@@ -166,7 +166,7 @@ and coastal sample points that are part of the <strong>imageML</strong> package.
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>cleaned dataframe. See <code><a href='processOIData.html'>processOIData</a>()</code>.</p></td>
+      <td><p>cleaned dataframe of SST values. See <code><a href='processOIData.html'>processOIData</a>()</code>. Note, this function might require that lon_0=0 in the crs.</p></td>
     </tr>
     <tr>
       <th>threshold</th>
