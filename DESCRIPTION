@@ -15,6 +15,7 @@ Description: Various functions for downloading data, processing raster images, a
 Depends: R (>= 3.5.0), graphics, grDevices, ggplot2
 Imports: 
   colorRamps,
+  dplyr,
   dendextend,
   grid,
   here,
@@ -41,6 +42,7 @@ Suggests:
     lubridate,
     png,
     readr,
+    rerddap,
     rgdal,
     rmarkdown,
     scales,

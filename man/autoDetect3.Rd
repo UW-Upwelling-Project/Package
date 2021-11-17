@@ -19,7 +19,7 @@ autoDetect3(
 )
 }
 \arguments{
-\item{x}{cleaned dataframe. See \code{\link{processOIData}()}.}
+\item{x}{cleaned dataframe of SST values. See \code{\link{processOIData}()}. Note, this function might require that lon_0=0 in the crs.}
 
 \item{threshold}{offshore-coast difference for upwelling}
 
@@ -47,7 +47,7 @@ dataframe with upwelling TRUE/FALSE added
 \description{
 Take a data frame processed from data downloaded from ERDDAP and evaluates
 upwelling by comparing the SST at a point along a smoothed coast to the average
-SST at a point offshore. This uses a smoothed coastline smoothed offshore line,
+SST at a point offshore. This uses a smoothed coastline, smoothed offshore line,
 and coastal sample points that are part of the \strong{imageML} package. See \code{\link{smoothCoastData}}.
 }
 \details{

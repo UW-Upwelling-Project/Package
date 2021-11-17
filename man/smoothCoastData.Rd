@@ -9,6 +9,7 @@
 \alias{buffer300}
 \alias{world.wintri}
 \alias{trim.world.wintri}
+\alias{crs_wintri}
 \title{Smoothed coast data objects}
 \description{
 See \code{vignette("Smooth Coastline Data")} for how these data were created.
@@ -26,6 +27,7 @@ so there will be more upwelling NAs along the coast.
 \item \code{world} A world coastline in \code{sp::SpatialLines}, format in Winkel Tripel projection. \code{trim.world.wintri} has the islands removed
 \item \code{sample_points} A sample of points from the smooth 20km buffer line where points
 are 100km apart. List with points for the buffer lines with and without the islands removed.
+\item \code{crs_wintri} The string for the Wintri projection used.
 }
 }
 \keyword{data}

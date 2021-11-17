@@ -16,7 +16,7 @@ getNearestPointOnLine(
 
 \item{p}{the points as a \code{sp::SpatialPoints} object.}
 
-\item{smooth.method}{type of method to use to smooth the offshore line. This is needed to have the offshore points spread regularly along the line and not be affected by divits.}
+\item{smooth.method}{type of method to use to smooth the offshore line. This is needed to have the offshore points spread regularly along the line and not be affected by divots.}
 
 \item{...}{parameters to specify smoothing. If "gSimplify", \code{tol=30} is ok. If "ksmooth", \code{smoothness=5} is ok.}
 }

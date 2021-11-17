@@ -20,7 +20,7 @@ makeCoastBuffer <- function(d = 300, units = "km", crs.to.use = "wintri", remove
   buff1 <- rgeos::gBuffer(mworld, width = d, byid = TRUE)
   e <- raster::erase(buff1, mworld)
   if (remove.holes) e <- spatialEco::remove.holes(spatialEco::remove.holes(e))
-  el <- mthods::as(mworld, "SpatialLines")
+  el <- methods::as(mworld, "SpatialLines")
   df <- c()
   n <- length(el@lines[[1]]@Lines)
   for (i in 1:n) {

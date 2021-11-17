@@ -13,7 +13,7 @@ processOIData(inputfile)
 return a processed data frame
 }
 \description{
-Process a download from CoastWatch ERDDAP OI SST data. Mask out the Puget Sound
+Process a download from CoastWatch ERDDAP OI SST data. Mask out the Puget Sound. Columns are lat, lon, sst.
 }
 \details{
 download.file("https://coastwatch.pfeg.noaa.gov/erddap/griddap/ncdcOisst21Agg.csv?sst\%5B(2019-01-01T12:00:00Z):1:(2020-01-01T12:00:00Z)\%5D\%5B(0.0):1:(0.0)\%5D\%5B(35.125):1:(52.125)\%5D\%5B(228.125):1:(238.125)\%5D", "data/pilot_data.csv")

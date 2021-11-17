@@ -3,7 +3,7 @@
 #' See `vignette("Smooth Coastline Data")` for how these data were created.
 #' 
 #' @name smoothCoastData
-#' @aliases buffers world sample_points buffer20 buffer300 world.wintri trim.world.wintri
+#' @aliases buffers world sample_points buffer20 buffer300 world.wintri trim.world.wintri crs_wintri
 #' 
 #' @details
 #' * `buffer300` A 300 km buffer list in `sp::SpatialPolygons`, `sp::SpatialLines`, and 
@@ -17,7 +17,7 @@
 #' * `world` A world coastline in `sp::SpatialLines`, format in Winkel Tripel projection. `trim.world.wintri` has the islands removed
 #' * `sample_points` A sample of points from the smooth 20km buffer line where points 
 #' are 100km apart. List with points for the buffer lines with and without the islands removed.
-#' 
+#' * `crs_wintri` The string for the Wintri projection used.
 #'
 #' @keywords data upwelling
 NULL
